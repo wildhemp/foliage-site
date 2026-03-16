@@ -126,7 +126,7 @@
     /* Download section */
     .download-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
     .download-card {
@@ -249,7 +249,7 @@
 
     /* Responsive */
     @media (max-width: 640px) {
-      .download-grid { grid-template-columns: 1fr; }
+      .download-grid { grid-template-columns: repeat(2, 1fr); }
       nav { flex-direction: column; gap: 12px; }
       .hero { padding: 40px 16px 32px; }
       section { padding: 0 16px 36px; }
@@ -300,17 +300,22 @@
     <div class="download-card">
       <h3>macOS</h3>
       <p class="arch">Apple Silicon & Intel</p>
-      <a href="latest/macos" class="download-link">.dmg</a>
+      <a href="latest/macos" class="download-link" onclick="downloadViaIframe(event)">.dmg</a>
     </div>
     <div class="download-card">
       <h3>Linux</h3>
-      <p class="arch">AppImage & .deb</p>
-      <a href="latest/linux" class="download-link">.AppImage</a>
+      <p class="arch">x86_64</p>
+      <a href="latest/linux" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
+    </div>
+    <div class="download-card">
+      <h3>Linux</h3>
+      <p class="arch">ARM64 / aarch64</p>
+      <a href="latest/linux-arm64" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
     </div>
     <div class="download-card">
       <h3>Windows</h3>
       <p class="arch">64-bit installer</p>
-      <a href="latest/windows" class="download-link">.msi</a>
+      <a href="latest/windows" class="download-link" onclick="downloadViaIframe(event)">.msi</a>
     </div>
   </div>
 </section>
@@ -367,6 +372,17 @@
 <footer>
   <span class="prompt">$</span> <span class="cmd">echo</span> <span class="str">"Built using Foliage"</span>
 </footer>
+
+<script>
+function downloadViaIframe(e) {
+  e.preventDefault();
+  var iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = e.currentTarget.href;
+  document.body.appendChild(iframe);
+  setTimeout(function() { document.body.removeChild(iframe); }, 60000);
+}
+</script>
 
 </body>
 </html>
