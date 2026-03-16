@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foliage - Orchestrate Parallel AI Coding Sessions</title>
+  <meta name="description" content="Run a team of AI coding agents across git worktrees. Parallel terminals, live diffs, and code review in one desktop app.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #282c34;
+      --bg-surface: #21252b;
+      --bg-gutter: #2c313a;
+      --bg-active: #3e4451;
+      --text: #abb2bf;
+      --text-muted: #5c6370;
+      --text-bright: #dcdfe4;
+      --accent: #61afef;
+      --accent-hover: #79bff5;
+      --green: #98c379;
+      --yellow: #e5c07b;
+      --red: #e06c75;
+      --purple: #c678dd;
+      --cyan: #56b6c2;
+      --orange: #d19a66;
+      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Terminal chrome */
+    .term {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-active);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--bg-gutter);
+      border-bottom: 1px solid var(--bg-active);
+    }
+    .term-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .term-dot.r { background: var(--red); }
+    .term-dot.y { background: var(--yellow); }
+    .term-dot.g { background: var(--green); }
+    .term-title {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .term-body {
+      padding: 20px 24px;
+      overflow-x: auto;
+    }
+
+    /* Prompt styling */
+    .prompt { color: var(--green); }
+    .cmd { color: var(--text-bright); }
+    .flag { color: var(--yellow); }
+    .arg { color: var(--orange); }
+    .comment { color: var(--text-muted); font-style: italic; }
+    .output { color: var(--text); }
+    .highlight { color: var(--accent); }
+    .str { color: var(--green); }
+
+    /* Layout */
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .nav-logo::before { content: "> "; color: var(--text-muted); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); font-size: 13px; }
+    .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      padding: 60px 24px 48px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero .term-body { line-height: 2; }
+
+    /* Sections */
+    section { max-width: 800px; margin: 0 auto; padding: 0 24px 48px; }
+    section h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    section h2::before { content: "# "; color: var(--bg-active); }
+
+    /* Download section */
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .download-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-active);
+      border-radius: 6px;
+      padding: 16px;
+      transition: border-color 0.15s;
+    }
+    .download-card:hover { border-color: var(--accent); }
+    .download-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 2px;
+    }
+    .download-card .arch {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .download-link {
+      display: block;
+      text-align: center;
+      padding: 6px 12px;
+      background: var(--bg-gutter);
+      border: 1px solid var(--bg-active);
+      border-radius: 4px;
+      color: var(--accent);
+      font-size: 12px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .download-link:hover {
+      background: var(--bg-active);
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Feature list (terminal-style) */
+    .feature-list { list-style: none; }
+    .feature-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg-gutter);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list .feat-name { color: var(--accent); }
+    .feature-list .feat-sep { color: var(--text-muted); margin: 0 8px; }
+    .feature-list .feat-desc { color: var(--text); }
+
+    /* How it works */
+    .steps-list { list-style: none; counter-reset: step; }
+    .steps-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bg-gutter);
+      display: flex;
+      gap: 12px;
+    }
+    .steps-list li:last-child { border-bottom: none; }
+    .steps-list .step-num {
+      color: var(--yellow);
+      font-weight: 700;
+      flex-shrink: 0;
+      width: 24px;
+    }
+    .steps-list .step-title { color: var(--text-bright); font-weight: 600; }
+    .steps-list .step-desc { color: var(--text); }
+
+    /* Install command */
+    .install-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-active);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .install-box code { flex: 1; color: var(--text-bright); }
+    .install-box .copy-btn {
+      background: none;
+      border: 1px solid var(--bg-active);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .install-box .copy-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-active);
+      padding: 20px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Cursor blink */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--text-bright);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .download-grid { grid-template-columns: 1fr; }
+      nav { flex-direction: column; gap: 12px; }
+      .hero { padding: 40px 16px 32px; }
+      section { padding: 0 16px 36px; }
+      .term-body { padding: 16px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">foliage</div>
+  <div class="nav-links">
+    <a href="#download" style="color: var(--accent);">download</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="term">
+    <div class="term-bar">
+      <span class="term-dot r"></span>
+      <span class="term-dot y"></span>
+      <span class="term-dot g"></span>
+      <span class="term-title">foliage</span>
+    </div>
+    <div class="term-body">
+      <div><span class="prompt">$</span> <span class="cmd">foliage</span> <span class="flag">--about</span></div>
+      <div>&nbsp;</div>
+      <div><span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span></div>
+      <div><span class="output">across git worktrees.</span></div>
+      <div>&nbsp;</div>
+      <div><span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span></div>
+      <div><span class="comment"># branches with real terminals, live diffs,</span></div>
+      <div><span class="comment"># and built-in code review.</span></div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">$</span> <span class="cmd">foliage</span> <span class="flag">--platforms</span></div>
+      <div><span class="output">  macOS (Apple Silicon + Intel)</span></div>
+      <div><span class="output">  Linux (AppImage, .deb)</span></div>
+      <div><span class="output">  Windows (.msi, .exe)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 id="download">Download</h2>
+  <div class="download-grid">
+    <div class="download-card">
+      <h3>macOS</h3>
+      <p class="arch">Apple Silicon & Intel</p>
+      <a href="latest/macos" class="download-link">.dmg</a>
+    </div>
+    <div class="download-card">
+      <h3>Linux</h3>
+      <p class="arch">AppImage & .deb</p>
+      <a href="latest/linux" class="download-link">.AppImage</a>
+    </div>
+    <div class="download-card">
+      <h3>Windows</h3>
+      <p class="arch">64-bit installer</p>
+      <a href="latest/windows" class="download-link">.msi</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Features</h2>
+  <div class="term">
+    <div class="term-bar">
+      <span class="term-dot r"></span>
+      <span class="term-dot y"></span>
+      <span class="term-dot g"></span>
+      <span class="term-title">foliage --features</span>
+    </div>
+    <div class="term-body">
+      <ul class="feature-list">
+        <li><span class="feat-name">parallel-worktrees</span><span class="feat-sep">--</span><span class="feat-desc">Spin up isolated git worktrees, run independent agents on each</span></li>
+        <li><span class="feat-name">real-terminals</span><span class="feat-sep">--</span><span class="feat-desc">Full xterm.js PTY terminals, not sandboxed environments</span></li>
+        <li><span class="feat-name">multi-agent</span><span class="feat-sep">--</span><span class="feat-desc">Claude Code, Codex, and Gemini CLI per worktree, each with own context</span></li>
+        <li><span class="feat-name">live-diffs</span><span class="feat-sep">--</span><span class="feat-desc">Lines added/deleted, PR status, uncommitted and unpushed counts</span></li>
+        <li><span class="feat-name">code-review</span><span class="feat-sep">--</span><span class="feat-desc">Built-in AI-powered structured code review panel</span></li>
+        <li><span class="feat-name">themes</span><span class="feat-sep">--</span><span class="feat-desc">Multiple color themes with adjustable window transparency</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>How it works</h2>
+  <ol class="steps-list">
+    <li>
+      <span class="step-num">[1]</span>
+      <div>
+        <div class="step-title">Open a repository</div>
+        <div class="step-desc">Point Foliage at any git repo. It discovers existing worktrees automatically.</div>
+      </div>
+    </li>
+    <li>
+      <span class="step-num">[2]</span>
+      <div>
+        <div class="step-title">Create worktrees</div>
+        <div class="step-desc">Spin up new branches as isolated worktrees. Each gets its own agent and user terminal.</div>
+      </div>
+    </li>
+    <li>
+      <span class="step-num">[3]</span>
+      <div>
+        <div class="step-title">Deploy agents</div>
+        <div class="step-desc">Agents start working in parallel. Monitor progress, review changes, and ship faster.</div>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<footer>
+  <span class="prompt">$</span> <span class="cmd">echo</span> <span class="str">"Built using Foliage"</span>
+</footer>
+
+</body>
+</html>
