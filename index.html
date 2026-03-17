@@ -123,10 +123,51 @@
     }
     section h2::before { content: "# "; color: var(--bg-active); }
 
+    /* Auto-detected download */
+    .download-auto {
+      margin-bottom: 16px;
+    }
+    .download-auto-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px 20px;
+      background: var(--bg-gutter);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+    .download-auto-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+    }
+    .download-auto-btn .auto-sub {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .download-auto-btn:hover .auto-sub {
+      color: var(--bg-active);
+    }
+    .download-all-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
     /* Download section */
     .download-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 12px;
     }
     .download-card {
@@ -137,6 +178,7 @@
       transition: border-color 0.15s;
     }
     .download-card:hover { border-color: var(--accent); }
+    .download-card.detected { border-color: var(--accent); }
     .download-card h3 {
       font-size: 14px;
       font-weight: 600;
@@ -250,6 +292,7 @@
     /* Responsive */
     @media (max-width: 640px) {
       .download-grid { grid-template-columns: repeat(2, 1fr); }
+      .download-auto-btn { font-size: 13px; padding: 12px 16px; }
       nav { flex-direction: column; gap: 12px; }
       .hero { padding: 40px 16px 32px; }
       section { padding: 0 16px 36px; }
@@ -296,23 +339,30 @@
 
 <section>
   <h2 id="download">Download</h2>
+  <div class="download-auto" id="download-auto"></div>
+  <p class="download-all-label">All platforms:</p>
   <div class="download-grid">
-    <div class="download-card">
+    <div class="download-card" id="dl-macos-arm">
       <h3>macOS</h3>
-      <p class="arch">Apple Silicon & Intel</p>
+      <p class="arch">Apple Silicon</p>
       <a href="latest/macos" class="download-link" onclick="downloadViaIframe(event)">.dmg</a>
     </div>
-    <div class="download-card">
+    <div class="download-card" id="dl-macos-intel">
+      <h3>macOS</h3>
+      <p class="arch">Intel</p>
+      <a href="latest/macos-intel" class="download-link" onclick="downloadViaIframe(event)">.dmg</a>
+    </div>
+    <div class="download-card" id="dl-linux-x64">
       <h3>Linux</h3>
       <p class="arch">x86_64</p>
       <a href="latest/linux" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
     </div>
-    <div class="download-card">
+    <div class="download-card" id="dl-linux-arm">
       <h3>Linux</h3>
       <p class="arch">ARM64 / aarch64</p>
       <a href="latest/linux-arm64" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
     </div>
-    <div class="download-card">
+    <div class="download-card" id="dl-windows">
       <h3>Windows</h3>
       <p class="arch">64-bit installer</p>
       <a href="latest/windows" class="download-link" onclick="downloadViaIframe(event)">.msi</a>
@@ -382,6 +432,52 @@ function downloadViaIframe(e) {
   document.body.appendChild(iframe);
   setTimeout(function() { document.body.removeChild(iframe); }, 60000);
 }
+
+(function() {
+  var ua = navigator.userAgent;
+  var platform = navigator.platform || '';
+  var detected = null;
+
+  if (/Mac/.test(platform)) {
+    // Check for Apple Silicon via WebGL renderer or default to Apple Silicon
+    try {
+      var canvas = document.createElement('canvas');
+      var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (gl) {
+        var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+        var renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+        if (/Intel/.test(renderer)) {
+          detected = { id: 'dl-macos-intel', label: 'Download for macOS (Intel)', sub: '.dmg', href: 'latest/macos-intel' };
+        }
+      }
+    } catch(e) {}
+    if (!detected) {
+      detected = { id: 'dl-macos-arm', label: 'Download for macOS (Apple Silicon)', sub: '.dmg', href: 'latest/macos' };
+    }
+  } else if (/Win/.test(platform)) {
+    detected = { id: 'dl-windows', label: 'Download for Windows', sub: '.msi, 64-bit', href: 'latest/windows' };
+  } else if (/Linux/.test(platform) || /Linux/.test(ua)) {
+    // Check for ARM64
+    if (/aarch64|arm64/i.test(ua) || /aarch64|arm64/i.test(platform)) {
+      detected = { id: 'dl-linux-arm', label: 'Download for Linux (ARM64)', sub: '.AppImage', href: 'latest/linux-arm64' };
+    } else {
+      detected = { id: 'dl-linux-x64', label: 'Download for Linux (x86_64)', sub: '.AppImage', href: 'latest/linux' };
+    }
+  }
+
+  if (detected) {
+    var container = document.getElementById('download-auto');
+    var btn = document.createElement('a');
+    btn.href = detected.href;
+    btn.className = 'download-auto-btn';
+    btn.onclick = downloadViaIframe;
+    btn.innerHTML = detected.label + '<span class="auto-sub">' + detected.sub + '</span>';
+    container.appendChild(btn);
+
+    var card = document.getElementById(detected.id);
+    if (card) card.classList.add('detected');
+  }
+})();
 </script>
 
 </body>
