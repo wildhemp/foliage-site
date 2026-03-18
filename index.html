@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Foliage - Orchestrate Parallel AI Coding Sessions</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="description" content="Run a team of AI coding agents across git worktrees. Parallel terminals, live diffs, and code review in one desktop app.">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -317,22 +318,9 @@
       <span class="term-dot g"></span>
       <span class="term-title">foliage</span>
     </div>
-    <div class="term-body">
-      <div><span class="prompt">$</span> <span class="cmd">foliage</span> <span class="flag">--about</span></div>
-      <div>&nbsp;</div>
-      <div><span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span></div>
-      <div><span class="output">across git worktrees.</span></div>
-      <div>&nbsp;</div>
-      <div><span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span></div>
-      <div><span class="comment"># branches with real terminals, live diffs,</span></div>
-      <div><span class="comment"># and built-in code review.</span></div>
-      <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cmd">foliage</span> <span class="flag">--platforms</span></div>
-      <div><span class="output">  macOS (Apple Silicon + Intel)</span></div>
-      <div><span class="output">  Linux (AppImage, .deb)</span></div>
-      <div><span class="output">  Windows (.msi, .exe)</span></div>
-      <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cursor"></span></div>
+    <div class="term-body" id="hero-term" tabindex="0" style="cursor: text; outline: none; height: 430px; overflow-y: auto;">
+      <div id="term-history"></div>
+      <div id="term-input-line"><span class="prompt">$</span> <span id="term-input" class="cmd"></span><span class="cursor"></span></div>
     </div>
   </div>
 </section>
@@ -416,6 +404,13 @@
         <div class="step-desc">Agents start working in parallel. Monitor progress, review changes, and ship faster.</div>
       </div>
     </li>
+    <li>
+      <span class="step-num">[*]</span>
+      <div>
+        <div class="step-title">Uses your existing CLI agents</div>
+        <div class="step-desc">Foliage runs Claude Code, Codex, and Gemini CLI directly — just install them as you normally would. No wrappers, no API keys to configure.</div>
+      </div>
+    </li>
   </ol>
 </section>
 
@@ -477,6 +472,213 @@ function downloadViaIframe(e) {
     var card = document.getElementById(detected.id);
     if (card) card.classList.add('detected');
   }
+})();
+
+// Interactive hero terminal
+(function() {
+  var term = document.getElementById('hero-term');
+  var history = document.getElementById('term-history');
+  var inputEl = document.getElementById('term-input');
+  var inputLine = document.getElementById('term-input-line');
+  var cmdInput = '';
+  var cmdHistory = [];
+  var historyIndex = -1;
+
+  var commands = {
+    'foliage --about': function() {
+      return [
+        '',
+        '<span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span>',
+        '<span class="output">across git worktrees.</span>',
+        '',
+        '<span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span>',
+        '<span class="comment"># branches with real terminals, live diffs,</span>',
+        '<span class="comment"># and built-in code review.</span>',
+        ''
+      ];
+    },
+    'foliage --platforms': function() {
+      return [
+        '<span class="output">  macOS (Apple Silicon + Intel)</span>',
+        '<span class="output">  Linux (AppImage, .deb)</span>',
+        '<span class="output">  Windows (.msi, .exe)</span>',
+        ''
+      ];
+    },
+    'foliage --features': function() {
+      return [
+        '<span class="output">  <span class="highlight">parallel-worktrees</span>  Spin up isolated git worktrees, run independent agents on each</span>',
+        '<span class="output">  <span class="highlight">real-terminals</span>      Full xterm.js PTY terminals, not sandboxed environments</span>',
+        '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI per worktree, each with own context</span>',
+        '<span class="output">  <span class="highlight">live-diffs</span>          Lines added/deleted, PR status, uncommitted and unpushed counts</span>',
+        '<span class="output">  <span class="highlight">code-review</span>         Built-in AI-powered structured code review panel</span>',
+        '<span class="output">  <span class="highlight">themes</span>              Multiple color themes with adjustable window transparency</span>',
+        ''
+      ];
+    },
+    'foliage --help': function() {
+      return [
+        '',
+        '<span class="output"><span class="highlight">foliage</span> - Orchestrate parallel AI coding sessions</span>',
+        '',
+        '<span class="output">Usage: foliage [OPTIONS]</span>',
+        '',
+        '<span class="output">Options:</span>',
+        '<span class="output">  <span class="flag">--about</span>       What is Foliage?</span>',
+        '<span class="output">  <span class="flag">--platforms</span>   Supported platforms</span>',
+        '<span class="output">  <span class="flag">--features</span>   List features</span>',
+        '<span class="output">  <span class="flag">--download</span>    Download links</span>',
+        '<span class="output">  <span class="flag">--help</span>        Show this help message</span>',
+        ''
+      ];
+    },
+    'foliage --download': function() {
+      return [
+        '',
+        '<span class="output">Available downloads:</span>',
+        '',
+        '<span class="output">  <a href="latest/macos" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Apple Silicon)</a>          .dmg</span>',
+        '<span class="output">  <a href="latest/macos-intel" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Intel)</a>                  .dmg</span>',
+        '<span class="output">  <a href="latest/linux" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (x86_64)</a>                 .AppImage</span>',
+        '<span class="output">  <a href="latest/linux-arm64" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (ARM64)</a>                  .AppImage</span>',
+        '<span class="output">  <a href="latest/windows" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Windows (64-bit)</a>               .msi</span>',
+        ''
+      ];
+    },
+    'help': function() {
+      return commands['foliage --help']();
+    },
+    'clear': 'clear'
+  };
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function appendLines(lines) {
+    for (var i = 0; i < lines.length; i++) {
+      var div = document.createElement('div');
+      if (lines[i] === '') {
+        div.innerHTML = '&nbsp;';
+      } else {
+        div.innerHTML = lines[i];
+      }
+      history.appendChild(div);
+    }
+  }
+
+  function appendPrompt(cmd) {
+    var div = document.createElement('div');
+    var escaped = escapeHtml(cmd);
+    // Highlight foliage commands
+    if (/^foliage\s/.test(cmd)) {
+      var parts = cmd.split(/\s+/);
+      var highlighted = '<span class="cmd">' + escapeHtml(parts[0]) + '</span>';
+      for (var i = 1; i < parts.length; i++) {
+        if (parts[i].indexOf('--') === 0) {
+          highlighted += ' <span class="flag">' + escapeHtml(parts[i]) + '</span>';
+        } else {
+          highlighted += ' ' + escapeHtml(parts[i]);
+        }
+      }
+      div.innerHTML = '<span class="prompt">$</span> ' + highlighted;
+    } else {
+      div.innerHTML = '<span class="prompt">$</span> <span class="cmd">' + escaped + '</span>';
+    }
+    history.appendChild(div);
+  }
+
+  function runCommand(cmd) {
+    var trimmed = cmd.trim();
+    appendPrompt(trimmed);
+
+    if (trimmed === '') {
+      // no-op
+    } else if (commands[trimmed] === 'clear') {
+      history.innerHTML = '';
+    } else if (commands[trimmed]) {
+      appendLines(commands[trimmed]());
+    } else if (trimmed === 'foliage' || /^foliage\s/.test(trimmed)) {
+      // Unknown foliage subcommand — show help
+      if (trimmed !== 'foliage') {
+        var flag = trimmed.replace(/^foliage\s*/, '');
+        var errDiv = document.createElement('div');
+        errDiv.innerHTML = '<span class="output">foliage: unknown option: ' + escapeHtml(flag) + '</span>';
+        history.appendChild(errDiv);
+      }
+      appendLines(commands['foliage --help']());
+    } else {
+      // bash-style error
+      var argv = trimmed.split(/\s+/);
+      var div = document.createElement('div');
+      div.innerHTML = '<span class="output">bash: ' + escapeHtml(argv[0]) + ': command not found</span>';
+      history.appendChild(div);
+      var hint = document.createElement('div');
+      hint.innerHTML = '<span class="comment"># Try: foliage --help</span>';
+      history.appendChild(hint);
+    }
+
+    if (trimmed !== '') {
+      cmdHistory.unshift(trimmed);
+    }
+    historyIndex = -1;
+    cmdInput = '';
+    inputEl.textContent = '';
+    scrollToBottom();
+  }
+
+  function scrollToBottom() {
+    term.scrollTop = term.scrollHeight;
+  }
+
+  // Boot: run initial command
+  runCommand('foliage --help');
+
+  // Focus terminal on click
+  term.addEventListener('click', function() {
+    term.focus();
+  });
+
+  // Keyboard handling
+  term.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      runCommand(cmdInput);
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      cmdInput = cmdInput.slice(0, -1);
+      inputEl.textContent = cmdInput;
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
+        historyIndex++;
+        cmdInput = cmdHistory[historyIndex];
+        inputEl.textContent = cmdInput;
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        historyIndex--;
+        cmdInput = cmdHistory[historyIndex];
+        inputEl.textContent = cmdInput;
+      } else {
+        historyIndex = -1;
+        cmdInput = '';
+        inputEl.textContent = '';
+      }
+    } else if (e.key === 'l' && e.ctrlKey) {
+      e.preventDefault();
+      history.innerHTML = '';
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      cmdInput += e.key;
+      inputEl.textContent = cmdInput;
+      scrollToBottom();
+    }
+  });
+
+  // Auto-focus on page load
+  term.focus();
 })();
 </script>
 
