@@ -265,6 +265,109 @@
       border-color: var(--accent);
     }
 
+    /* Screenshots */
+    .section-screenshots { max-width: 1000px; }
+    .screenshot-preview {
+      border: 1px solid var(--bg-active);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .screenshot-preview:hover { border-color: var(--accent); }
+    .screenshot-preview img {
+      width: 100%;
+      display: block;
+    }
+
+    /* Lightbox carousel */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.9);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-img-wrap {
+      position: relative;
+      max-width: 95vw;
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-img-wrap img {
+      max-width: 95vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      transition: opacity 0.2s;
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-gutter);
+      border: 1px solid var(--bg-active);
+      color: var(--text-bright);
+      font-family: var(--mono);
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+      z-index: 1;
+    }
+    .lightbox-nav:hover {
+      background: var(--bg-active);
+      border-color: var(--accent);
+    }
+    .lightbox-prev { left: -56px; }
+    .lightbox-next { right: -56px; }
+    .lightbox-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .lightbox-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .lightbox-dot.active { background: var(--accent); }
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 24px;
+      cursor: pointer;
+      font-family: var(--mono);
+      transition: color 0.15s;
+    }
+    .lightbox-close:hover { color: var(--text-bright); }
+    @media (max-width: 640px) {
+      .lightbox-prev { left: 8px; }
+      .lightbox-next { right: 8px; }
+      .lightbox-nav { width: 32px; height: 32px; font-size: 16px; }
+    }
+
+    @media (max-width: 640px) {
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--bg-active);
@@ -320,10 +423,26 @@
     </div>
     <div class="term-body" id="hero-term" tabindex="0" style="cursor: text; outline: none; height: 430px; overflow-y: auto;">
       <div id="term-history"></div>
-      <div id="term-input-line"><span class="prompt">$</span> <span id="term-input" class="cmd"></span><span class="cursor"></span></div>
+      <div id="term-input-line"><span class="prompt">$</span> <span id="term-input" class="cmd"></span><span class="cursor"></span><span id="term-hint" class="comment" style="pointer-events:none; margin-left: 8px;"></span></div>
     </div>
   </div>
 </section>
+
+<section class="section-screenshots">
+  <div class="screenshot-preview" onclick="openLightbox(0)">
+    <img src="image_generic.png" alt="Foliage - worktree view with agent terminal, user terminal, and changes panel">
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <div class="lightbox-img-wrap">
+    <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&lsaquo;</button>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">&rsaquo;</button>
+  </div>
+  <div class="lightbox-dots" id="lightbox-dots"></div>
+</div>
 
 <section>
   <h2 id="download">Download</h2>
@@ -483,6 +602,11 @@ function downloadViaIframe(e) {
   var cmdInput = '';
   var cmdHistory = [];
   var historyIndex = -1;
+  var hintEl = document.getElementById('term-hint');
+
+  function updateHint() {
+    hintEl.textContent = cmdInput === '' ? 'try foliage --about' : '';
+  }
 
   var commands = {
     'foliage --about': function() {
@@ -624,6 +748,7 @@ function downloadViaIframe(e) {
     historyIndex = -1;
     cmdInput = '';
     inputEl.textContent = '';
+    updateHint();
     scrollToBottom();
   }
 
@@ -633,6 +758,7 @@ function downloadViaIframe(e) {
 
   // Boot: run initial command
   runCommand('foliage --help');
+  updateHint();
 
   // Focus terminal on click
   term.addEventListener('click', function() {
@@ -648,6 +774,7 @@ function downloadViaIframe(e) {
       e.preventDefault();
       cmdInput = cmdInput.slice(0, -1);
       inputEl.textContent = cmdInput;
+      updateHint();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
@@ -673,6 +800,7 @@ function downloadViaIframe(e) {
       e.preventDefault();
       cmdInput += e.key;
       inputEl.textContent = cmdInput;
+      updateHint();
       scrollToBottom();
     }
   });
@@ -680,6 +808,42 @@ function downloadViaIframe(e) {
   // Auto-focus on page load
   term.focus();
 })();
+
+var lbImages = ['image_generic.png', 'image_summary.png'];
+var lbIndex = 0;
+
+function openLightbox(index) {
+  lbIndex = index;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+function lightboxNav(dir) {
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  updateLightbox();
+}
+function updateLightbox() {
+  document.getElementById('lightbox-img').src = lbImages[lbIndex];
+  var dots = document.getElementById('lightbox-dots');
+  dots.innerHTML = '';
+  for (var i = 0; i < lbImages.length; i++) {
+    var dot = document.createElement('span');
+    dot.className = 'lightbox-dot' + (i === lbIndex ? ' active' : '');
+    dot.onclick = (function(idx) { return function() { lbIndex = idx; updateLightbox(); }; })(i);
+    dots.appendChild(dot);
+  }
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
+});
 </script>
 
 </body>
