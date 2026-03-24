@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Best Tools for Running Parallel AI Coding Agents in 2026 | Foliage Blog</title>
+  <meta name="description" content="A comprehensive comparison of 9 tools for running parallel AI coding agents: Foliage, JetBrains Air, Conductor, Superset, Emdash, Mux, Claude Squad, Oh My OpenAgent, and Plandex.">
+  <link rel="canonical" href="https://foliage.build/blog/best-parallel-ai-coding-tools-2026">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Best Tools for Running Parallel AI Coding Agents in 2026">
+  <meta property="og:description" content="A comprehensive comparison of 9 tools for orchestrating parallel AI coding sessions across git worktrees, terminals, and IDEs.">
+  <meta property="og:url" content="https://foliage.build/blog/best-parallel-ai-coding-tools-2026">
+  <meta property="og:site_name" content="Foliage">
+  <meta property="article:published_time" content="2026-03-24">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Best Tools for Running Parallel AI Coding Agents in 2026">
+  <meta name="twitter:description" content="9 tools compared: desktop apps, TUI tools, and CLI frameworks for parallel AI coding.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Best Tools for Running Parallel AI Coding Agents in 2026 — A Comprehensive Comparison",
+    "datePublished": "2026-03-24",
+    "author": { "@type": "Organization", "name": "Foliage", "url": "https://foliage.build" },
+    "publisher": { "@type": "Organization", "name": "Foliage", "url": "https://foliage.build" },
+    "description": "A comprehensive comparison of 9 tools for running parallel AI coding agents.",
+    "mainEntityOfPage": "https://foliage.build/blog/best-parallel-ai-coding-tools-2026"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #282c34;
+      --bg-surface: #21252b;
+      --bg-gutter: #2c313a;
+      --bg-active: #3e4451;
+      --text: #abb2bf;
+      --text-muted: #5c6370;
+      --text-bright: #dcdfe4;
+      --accent: #61afef;
+      --accent-hover: #79bff5;
+      --green: #98c379;
+      --yellow: #e5c07b;
+      --red: #e06c75;
+      --purple: #c678dd;
+      --cyan: #56b6c2;
+      --orange: #d19a66;
+      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .nav-logo::before { content: "> "; color: var(--text-muted); }
+    .nav-logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); font-size: 13px; }
+    .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+
+    /* Article header */
+    .article-header {
+      padding: 60px 24px 32px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .article-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-bright);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .article-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .article-meta time { color: var(--text); }
+    .disclosure {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      background: var(--bg-gutter);
+      border: 1px solid var(--bg-active);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--yellow);
+    }
+
+    /* Article body */
+    .article-body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .article-body h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin: 48px 0 16px;
+    }
+    .article-body h2::before { content: "# "; color: var(--bg-active); }
+    .article-body h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 32px 0 12px;
+    }
+    .article-body h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin: 20px 0 8px;
+    }
+    .article-body p {
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p strong { color: var(--text-bright); }
+    .article-body ul, .article-body ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .article-body li {
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .article-body li::marker { color: var(--text-muted); }
+    .article-body code {
+      background: var(--bg-gutter);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      color: var(--cyan);
+    }
+
+    /* Table of contents */
+    .toc {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-active);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .toc-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+    .toc ol {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .toc li {
+      padding: 4px 0;
+      font-size: 13px;
+    }
+    .toc a { color: var(--accent); }
+
+    /* Comparison table */
+    .comparison-table-wrap {
+      overflow-x: auto;
+      margin: 24px 0;
+      border: 1px solid var(--bg-active);
+      border-radius: 6px;
+      width: 70vw;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 48px);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .comparison-table th {
+      background: var(--bg-gutter);
+      color: var(--text-bright);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--bg-active);
+      position: sticky;
+      top: 0;
+    }
+    .comparison-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--bg-gutter);
+      color: var(--text);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:hover td { background: var(--bg-gutter); }
+    .comparison-table .tool-name { color: var(--accent); font-weight: 600; }
+    .comparison-table .tool-name a { color: inherit; }
+    .comparison-table .check { color: var(--green); }
+    .comparison-table .cross { color: var(--red); }
+    .comparison-table .partial { color: var(--yellow); }
+
+    /* Tool profile cards */
+    .tool-profile {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-active);
+      border-radius: 6px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .tool-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tool-header .tool-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .tool-header .tool-name:hover {
+      text-decoration: underline;
+    }
+    .tool-header .tool-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .tool-tagline {
+      color: var(--text);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .tool-profile h4 {
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    .tool-profile ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    .tool-profile li {
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    .best-for {
+      background: var(--bg-gutter);
+      border-left: 3px solid var(--green);
+      padding: 8px 12px;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .best-for strong { color: var(--green); }
+
+    /* Decision tree */
+    .decision-tree {
+      list-style: none;
+      padding: 0;
+    }
+    .decision-tree li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg-gutter);
+    }
+    .decision-tree li:last-child { border-bottom: none; }
+    .condition { color: var(--yellow); }
+    .arrow { color: var(--text-muted); margin: 0 8px; }
+    .recommendation { color: var(--green); font-weight: 600; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-active);
+      padding: 20px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      nav { flex-direction: column; gap: 12px; }
+      .article-header { padding: 40px 16px 24px; }
+      .article-header h1 { font-size: 20px; }
+      .article-body { padding: 0 16px 36px; }
+      .tool-profile { padding: 16px; }
+      .comparison-table { font-size: 11px; }
+      .tool-header { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">foliage</a>
+  <div class="nav-links">
+    <a href="/blog/">blog</a>
+    <a href="/#download" style="color: var(--accent);">download</a>
+  </div>
+</nav>
+
+<header class="article-header">
+  <h1>The Best Tools for Running Parallel AI Coding Agents in 2026 — A Comprehensive Comparison</h1>
+  <div class="article-meta">
+    <time datetime="2026-03-24">March 24, 2026</time>
+    <br>
+    <span class="disclosure">Disclosure: I built Foliage, one of the tools reviewed here.</span>
+  </div>
+</header>
+
+<article class="article-body">
+
+  <nav class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#landscape">The Landscape at a Glance</a></li>
+      <li><a href="#tools">Detailed Tool Profiles</a></li>
+      <li><a href="#dimensions">Dimension Deep-Dives</a></li>
+      <li><a href="#how-to-choose">How to Choose</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+    </ol>
+  </nav>
+
+  <!-- Introduction -->
+  <h2 id="introduction">Introduction</h2>
+
+  <p>2025 and 2026 brought a wave of CLI-based AI coding agents: <strong>Claude Code</strong>, <strong>Codex</strong>, <strong>Gemini CLI</strong>, and others. Each one can take a task description and write code autonomously in your terminal. They're powerful individually. The natural next step was obvious: what if you could run multiple agents in parallel, each on a different task, in isolated branches?</p>
+
+  <p>A new category of tools emerged to solve this problem. At least nine serious options now exist, ranging from polished desktop apps to lightweight TUI multiplexers to full CLI frameworks. JetBrains entered the space in March 2026 with <a href="https://air.dev/">Air</a>, bringing corporate backing and IDE expertise to a field previously dominated by indie developers and small startups.</p>
+
+  <p>This post compares them across several dimensions — <strong>platform support</strong>, <strong>terminal handling</strong>, <strong>agent flexibility</strong>, <strong>git isolation</strong>, <strong>code review</strong>, and <strong>openness</strong> — so you can decide which tradeoffs matter most to you. I built <a href="/">Foliage</a>, so I'm transparent about that, but this comparison is designed to be genuinely useful to anyone choosing a tool, not a sales pitch.</p>
+
+  <!-- Landscape at a Glance -->
+  <h2 id="landscape">The Landscape at a Glance</h2>
+
+  <p>Here's a quick summary of all nine tools before we go deep on each one. Scroll horizontally on mobile.</p>
+
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Type</th>
+          <th>Platform</th>
+          <th>Agents</th>
+          <th>Git Worktrees</th>
+          <th>Real PTY</th>
+          <th>License</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tool-name">Foliage</td>
+          <td>Desktop app</td>
+          <td>macOS / Win / Linux</td>
+          <td>Claude Code, Codex, Gemini CLI</td>
+          <td class="check">Yes</td>
+          <td class="check">Yes (xterm.js + portable-pty)</td>
+          <td>Closed source</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://air.dev/">JetBrains Air</a></td>
+          <td>Desktop app</td>
+          <td>macOS only*</td>
+          <td>Codex, Claude, Gemini CLI, Junie</td>
+          <td class="check">Yes (+ Docker)</td>
+          <td class="check">Built-in terminal</td>
+          <td>Closed (AI sub)</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://www.conductor.build/">Conductor</a></td>
+          <td>Desktop app</td>
+          <td>macOS only</td>
+          <td>Claude Code, Codex</td>
+          <td class="check">Yes</td>
+          <td class="partial">Chat-first</td>
+          <td>Closed source</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://superset.sh/">Superset</a></td>
+          <td>Desktop app</td>
+          <td>macOS only</td>
+          <td>Any CLI agent</td>
+          <td class="check">Yes</td>
+          <td class="check">Yes (built-in PTY)</td>
+          <td>ELv2</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://www.emdash.sh/">Emdash</a></td>
+          <td>Desktop app</td>
+          <td>macOS / Win / Linux</td>
+          <td>23+ CLI agents</td>
+          <td class="check">Yes</td>
+          <td class="cross">No (process invocation)</td>
+          <td>MIT</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://github.com/coder/mux">Mux</a></td>
+          <td>Desktop + Browser</td>
+          <td>macOS / Win / Linux / Web</td>
+          <td>Claude, GPT, Grok, Ollama</td>
+          <td class="check">Yes (+ Docker, SSH)</td>
+          <td class="check">Embedded terminal</td>
+          <td>AGPL-3.0</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a></td>
+          <td>TUI (terminal)</td>
+          <td>macOS / Linux</td>
+          <td>Claude Code, Codex, Gemini, Aider, Amp, custom</td>
+          <td class="check">Yes</td>
+          <td class="check">Yes (tmux)</td>
+          <td>AGPL-3.0</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://github.com/code-yeongyu/oh-my-openagent">Oh My OpenAgent</a></td>
+          <td>CLI framework</td>
+          <td>macOS / Win / Linux</td>
+          <td>11 built-in specialized agents</td>
+          <td class="check">Yes (per-task)</td>
+          <td class="check">Yes (tmux)</td>
+          <td>SUL-1.0</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://github.com/plandex-ai/plandex">Plandex</a></td>
+          <td>CLI agent</td>
+          <td>macOS / Linux / WSL</td>
+          <td>Claude, GPT, Google</td>
+          <td class="cross">No (internal sandbox)</td>
+          <td class="partial">REPL only</td>
+          <td>MIT</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><em>* JetBrains Air: Windows and Linux listed as "coming soon" with no timeline. Crystal (2,987 stars, MIT) was deprecated Feb 2026 and replaced by Nimbalyst (closed source) — not included as a current recommendation.</em></p>
+
+  <!-- Detailed Tool Profiles -->
+  <h2 id="tools">Detailed Tool Profiles</h2>
+
+  <!-- JetBrains Air -->
+  <div class="tool-profile" id="jetbrains-air">
+    <div class="tool-header">
+      <a href="https://air.dev/" class="tool-name">JetBrains Air</a>
+      <span class="tool-meta">Desktop App / macOS only (preview) / Closed source / JetBrains AI subscription</span>
+    </div>
+    <p class="tool-tagline">Agentic development environment from JetBrains, launched March 2026 in public preview. Built on the abandoned Fleet IDE codebase. The big-company entry into this space.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>JetBrains pedigree</strong> — polished, well-resourced, backed by 26 years of IDE experience</li>
+      <li><strong>Precise code context</strong> — reference specific lines, commits, classes, and methods when defining tasks, not just pasted text blobs</li>
+      <li><strong>Four agents out of the box:</strong> Codex, Claude Agent, Gemini CLI, and Junie (JetBrains' own agent)</li>
+      <li><strong><a href="https://www.jetbrains.com/acp/">Agent Client Protocol (ACP)</a></strong> — a vendor-neutral standard for adding new agents via the ACP Agent Registry</li>
+      <li><strong>Flexible execution isolation:</strong> local by default, Docker containers, or git worktrees for sandboxing</li>
+      <li><strong>Integrated post-execution review</strong> with full codebase context (not just diffs), plus built-in terminal, Git client, and preview</li>
+      <li><strong>Notification system</strong> for multi-task management — alerts when other tasks need attention</li>
+      <li><strong>BYOK:</strong> bring your own API keys for Anthropic, OpenAI, Google — or use JetBrains AI Pro subscription</li>
+      <li>Cloud execution in tech preview; team collaboration features planned</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>macOS only</strong> right now — Windows and Linux "coming soon" but no timeline</li>
+      <li>Public preview — not production-ready, expect rough edges</li>
+      <li>Requires JetBrains AI subscription <em>or</em> agent provider subscriptions + API keys</li>
+      <li>No local model support (Ollama, Qwen) — JetBrains says "no ETA" but it's "in planning"</li>
+      <li>Built on Fleet, which JetBrains abandoned before it left preview — raises questions about long-term commitment</li>
+      <li>Closed source — you're fully dependent on JetBrains' roadmap</li>
+      <li>Junie CLI (companion tool) costs $10-60/month depending on tier</li>
+      <li>Not a replacement IDE — handles agent work only</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> JetBrains ecosystem users who want enterprise-grade agent orchestration and don't mind the subscription model. Worth watching as it matures, but still in preview.
+    </div>
+  </div>
+
+  <!-- Conductor -->
+  <div class="tool-profile" id="conductor">
+    <div class="tool-header">
+      <a href="https://www.conductor.build/" class="tool-name">Conductor</a>
+      <span class="tool-meta">Desktop App / macOS only / Closed source / Free (team features planned)</span>
+    </div>
+    <p class="tool-tagline">macOS desktop app for orchestrating Claude Code and Codex agents. Built by Melty Labs (YC S24, $2.8M raised). The most well-known tool in this category.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Clean, polished UI</strong> with a warm aesthetic — the best-looking tool in this category</li>
+      <li><strong>Rapid iteration</strong> — 43 releases in 8 months shows strong development velocity</li>
+      <li>Good <strong>Linear integration</strong> with deeplinks</li>
+      <li>Plan mode, checkpoints, and Chrome integration</li>
+      <li>PR creation and merge conflict resolution built-in</li>
+      <li>Stacked PR visualization via Graphite support</li>
+      <li><strong>Notable users:</strong> Linear, Vercel, Notion, Stripe, Ramp</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>macOS only</strong> (Apple Silicon + Intel, no Windows/Linux)</li>
+      <li>Must clone repos from GitHub — can't point at local repos on disk</li>
+      <li>Had a <strong>public controversy</strong> over demanding broad GitHub OAuth permissions (full read-write access to entire GitHub account). Later added <code>gh</code> CLI alternative.</li>
+      <li><strong>Chat-first terminal</strong> — had to completely rewrite terminal in v0.38 for reliability; known garbled text when switching windows</li>
+      <li>Only supports Claude Code and Codex — no Gemini CLI, no custom agents</li>
+      <li>Users report GitHub GraphQL rate limit exhaustion in 15-20 minutes</li>
+      <li>Closed source</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> macOS-only teams who want a polished chat-first UI and don't mind cloning through GitHub.
+    </div>
+  </div>
+
+  <!-- Superset -->
+  <div class="tool-profile" id="superset">
+    <div class="tool-header">
+      <a href="https://superset.sh/" class="tool-name">Superset</a>
+      <span class="tool-meta">Desktop App / macOS only / ELv2 (source-available) / 7,863 stars</span>
+    </div>
+    <p class="tool-tagline">macOS desktop IDE for orchestrating CLI agents in parallel across git worktrees. Source-available with the highest star count among GUI tools.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li>Real PTY terminals built-in (agents run in actual terminals)</li>
+      <li><strong>Agent-agnostic:</strong> works with any CLI agent you can install</li>
+      <li>Built-in diff viewer for reviewing agent changes</li>
+      <li>Workspace presets for automating setup/teardown across multiple worktrees</li>
+      <li>One-click handoff to external editors (VS Code, etc.)</li>
+      <li><strong>Zero telemetry,</strong> no API proxying — your data stays local</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>macOS only</strong> — the single biggest constraint</li>
+      <li>ELv2 license is <strong>not true open source</strong> (restricts managed service use)</li>
+      <li>Many parallel worktrees means multiplied dependency installations, port conflicts, and disk usage</li>
+      <li>"Human review becomes the bottleneck" — acknowledged by the tool itself</li>
+      <li>Requires Bun v1.0+, Caddy reverse proxy, and GitHub CLI</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Solo macOS developers who want real terminals, agent flexibility, and zero telemetry.
+    </div>
+  </div>
+
+  <!-- Emdash -->
+  <div class="tool-profile" id="emdash">
+    <div class="tool-header">
+      <a href="https://www.emdash.sh/" class="tool-name">Emdash</a>
+      <span class="tool-meta">Desktop App / macOS, Win, Linux / MIT / YC W26 / 2,856 stars</span>
+    </div>
+    <p class="tool-tagline">Cross-platform desktop app for parallel agents. Notable for supporting 23+ CLI agents and "best-of-N" comparison workflows.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Broadest agent support: 23+ CLI agents</strong> including Claude Code, Codex, Gemini CLI, Amp, Qwen, Cursor, Cline, Copilot, and more</li>
+      <li><strong>"Best-of-N" comparisons:</strong> run multiple agents on the same task, pick the best result</li>
+      <li>Side-by-side diff view across agents</li>
+      <li>Direct ticket integration (Linear, GitHub Issues, Jira)</li>
+      <li><strong>Cross-platform:</strong> macOS, Windows, and Linux</li>
+      <li>SSH/SFTP remote development support</li>
+      <li><strong>Local-first:</strong> SQLite storage, no code sent to servers</li>
+      <li><strong>MIT license</strong> — the cleanest open-source option in this space</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>No embedded interactive terminal</strong> — focuses on diff review and PR creation rather than raw terminal access</li>
+      <li>Desktop only, no web/browser access</li>
+      <li>Requires Node.js</li>
+      <li>Newer product, community still growing</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Teams who want agent diversity and structured diff-review workflows across operating systems.
+    </div>
+  </div>
+
+  <!-- Mux -->
+  <div class="tool-profile" id="mux">
+    <div class="tool-header">
+      <a href="https://github.com/coder/mux" class="tool-name">Mux</a>
+      <span class="tool-meta">Desktop + Browser / macOS, Win, Linux, Web / AGPL-3.0 / by Coder / 1,419 stars</span>
+    </div>
+    <p class="tool-tagline">Desktop and browser-based app for parallel agents with the strongest enterprise story. Four runtime modes: local, worktree, Docker, SSH.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Most runtime flexibility:</strong> local, git worktree, full Docker isolation, and SSH remote execution</li>
+      <li><strong>Browser-based web UI</strong> for remote/team access — the only tool with this capability</li>
+      <li>VS Code extension for direct workspace access</li>
+      <li><strong>Enterprise features</strong> via Coder platform: audit logging, model governance, OIDC/SAML auth</li>
+      <li>Git divergence dashboard across parallel branches</li>
+      <li>Cost and token tracking</li>
+      <li><strong>Multi-provider:</strong> Claude, GPT, Grok, Ollama (local LLMs)</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li>Smallest community among the major tools (1,419 stars)</li>
+      <li>AGPL-3.0 license may deter some commercial users</li>
+      <li>Enterprise governance features require the Coder platform</li>
+      <li>Relatively new (September 2025)</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Enterprise teams and anyone who needs Docker isolation, SSH remote execution, or browser-based access.
+    </div>
+  </div>
+
+  <!-- Claude Squad -->
+  <div class="tool-profile" id="claude-squad">
+    <div class="tool-header">
+      <a href="https://github.com/smtg-ai/claude-squad" class="tool-name">Claude Squad</a>
+      <span class="tool-meta">TUI (terminal) / macOS, Linux / AGPL-3.0 / 6,579 stars</span>
+    </div>
+    <p class="tool-tagline">Lightweight Go TUI that multiplexes AI agents into isolated tmux sessions with git worktree isolation. The terminal-native option.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>True terminal multiplexer</strong> — real tmux PTY sessions, not simulated terminals</li>
+      <li><strong>Lightweight:</strong> single Go binary, minimal dependencies (just tmux and <code>gh</code>)</li>
+      <li>Vim-style keybindings for fast navigation</li>
+      <li>Session pause/resume without losing state</li>
+      <li>One-key push: commit and push to GitHub with <code>s</code></li>
+      <li>Supports Claude Code, Codex, Gemini, Aider, Amp, OpenCode, and custom programs</li>
+      <li>Auto-accept mode for unattended operation</li>
+      <li><strong>6,579 stars</strong> — large and active community</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li>TUI only — no GUI, no visual diff viewer, no desktop app</li>
+      <li>Requires tmux (not natively available on Windows)</li>
+      <li><strong>macOS and Linux only</strong></li>
+      <li>No built-in code review or PR management</li>
+      <li>For diff review, you need external tools</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Terminal power users who live in tmux and want the lightest possible orchestration layer.
+    </div>
+  </div>
+
+  <!-- Oh My OpenAgent -->
+  <div class="tool-profile" id="oh-my-openagent">
+    <div class="tool-header">
+      <a href="https://github.com/code-yeongyu/oh-my-openagent" class="tool-name">Oh My OpenAgent</a>
+      <span class="tool-meta">CLI framework / macOS, Win, Linux / SUL-1.0 / 43,066 stars</span>
+    </div>
+    <p class="tool-tagline">Not a standalone orchestrator but a plugin/harness for OpenCode that transforms it into a multi-agent system with 11 specialized agents and 46 lifecycle hooks. The most complex and powerful option.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>43,066 stars</strong> — by far the largest community in this space</li>
+      <li><strong>11 specialized agents</strong> (orchestrator, deep worker, planner, debugger, librarian, etc.)</li>
+      <li>46 lifecycle hooks across 3 tiers for deep customization</li>
+      <li><strong>Hash-anchored edit tool:</strong> content hashes verify file state before applying edits, preventing code corruption from stale context</li>
+      <li>"Ultrawork" mode: parallel self-correcting agents</li>
+      <li>Automatic task-to-model routing across 8 task categories</li>
+      <li>LSP integration, AST-Grep for 25+ languages</li>
+      <li>Built-in MCP tools (Exa search, Context7 docs, Grep.app)</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>Steep learning curve</strong> — the sheer volume of concepts is overwhelming</li>
+      <li>Requires <a href="https://opencode.ai/">OpenCode</a> as the base platform</li>
+      <li>SUL-1.0 license restricts commercial redistribution</li>
+      <li>Requires multiple API subscriptions for full functionality</li>
+      <li>CLI only — no visual interface</li>
+      <li>Not a standalone tool — it's a framework that enhances another tool</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Power users who want maximum control over agent behavior and don't mind complexity.
+    </div>
+  </div>
+
+  <!-- Plandex -->
+  <div class="tool-profile" id="plandex">
+    <div class="tool-header">
+      <a href="https://github.com/plandex-ai/plandex" class="tool-name">Plandex</a>
+      <span class="tool-meta">CLI agent / macOS, Linux, WSL / MIT / 15,138 stars / Maintenance mode</span>
+    </div>
+    <p class="tool-tagline">Terminal-based single-agent tool with internal version control. Not a parallel agent runner — included for context as a predecessor approach.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Sandbox model:</strong> AI changes never touch your files until you explicitly approve them</li>
+      <li>Internal version control with branching and rollback</li>
+      <li>2M token context window, 20M+ token project indexing</li>
+      <li>Configurable autonomy (full auto to step-by-step)</li>
+      <li><strong>MIT license,</strong> 15,138 stars</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>Single agent only — no parallelism</strong></li>
+      <li>Plandex Cloud shut down Nov 2025 (founder joined Promptfoo)</li>
+      <li>Self-hosted only from this point forward</li>
+      <li>In maintenance mode — limited future development</li>
+      <li>Windows requires WSL</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Included for historical context. Its sandbox-first philosophy influenced the tools that came after it, but it's not recommended for parallel workflows.
+    </div>
+  </div>
+
+  <!-- Foliage -->
+  <div class="tool-profile" id="foliage">
+    <div class="tool-header">
+      <span class="tool-name">Foliage</span>
+      <span class="tool-meta">Desktop App / macOS, Win, Linux / Closed source / Free</span>
+    </div>
+    <p class="tool-tagline">Cross-platform desktop app (Tauri v2) for orchestrating parallel AI agents with real PTY terminals and built-in code review. (Disclosure: I built this.)</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>Two real PTY terminals per worktree:</strong> agent terminal + user terminal side by side. You can interact with either at any time.</li>
+      <li><strong>Terminals persist across worktree switches</strong> (display toggle, not unmount) — no lost state when switching context</li>
+      <li><strong>Local-first:</strong> open any repo already on your machine, no cloning, no OAuth flows</li>
+      <li><strong>Cross-platform:</strong> macOS (Apple Silicon + Intel), Windows, and Linux</li>
+      <li><strong>Built-in AI code review engine:</strong> categorized issues (BUG, SECURITY, STYLE, SUGGESTION, NITPICK), two-phase review with false-positive filtering, color-coded badges, one-click quick-fix</li>
+      <li><strong>Automated PR review handling:</strong> view, reply, and resolve GitHub PR review threads. Automatically dispatch agents to address review feedback.</li>
+      <li><strong>MCP-based task integration:</strong> pull tasks from Linear, GitHub Issues, Jira, or any MCP-compatible system. Batch-create worktrees from tasks.</li>
+      <li><strong>Multi-agent:</strong> Claude Code, Codex, and Gemini CLI with per-worktree agent selection</li>
+      <li><strong>Built on Tauri v2</strong> for snappiness — native webview, no bundled Chromium</li>
+      <li>Browser-like worktree history with back/forward navigation</li>
+      <li>Real-time filesystem watching for live status updates</li>
+      <li>Closed source, free to use</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li>Smaller community than some competitors (newer project)</li>
+      <li>No Docker isolation mode (unlike Mux)</li>
+      <li>No "best-of-N" comparison feature (unlike Emdash)</li>
+      <li>No browser/web access (desktop only)</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> Developers who want real terminals, local-first workflow, cross-platform support, and built-in code review loops — without giving up interactivity.
+    </div>
+  </div>
+
+  <!-- Dimension Deep-Dives -->
+  <h2 id="dimensions">Dimension Deep-Dives</h2>
+
+  <p>The comparison table gives you the facts, but picking a tool requires understanding the tradeoffs behind those facts. These five dimensions are where the tools diverge most.</p>
+
+  <h3>1. Terminal Philosophy</h3>
+
+  <p>How a tool handles terminal interaction is perhaps the most visceral difference between them. There are four distinct approaches:</p>
+
+  <p><strong>Real PTY terminals (<a href="/">Foliage</a>, <a href="https://superset.sh/">Superset</a>, <a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>)</strong> give agents access to actual terminal emulators. You can work on the terminal alongside the agent and run TUI programs like <code>vim</code> or <code>nvim</code> without issues. Foliage provides <em>two</em> terminals per worktree — one for the agent and one for you — so you don't have to fight the agent for terminal access.</p>
+
+  <p><strong>Chat-first (<a href="https://www.conductor.build/">Conductor</a>)</strong> renders agent output in chat bubbles with a supplementary terminal view. This is approachable for non-terminal users but means you lose the ability to interact with the agent's environment directly. Conductor had to rewrite its terminal implementation in v0.38 to address garbled text issues — a sign of the tension between chat and terminal paradigms.</p>
+
+  <p><strong>Task-first with integrated tools (<a href="https://air.dev/">JetBrains Air</a>)</strong> takes a structured approach: define a task with precise code context, let the agent execute, then review results using a built-in terminal, Git client, and preview pane. It's neither chat-based nor terminal-first — more like a project management layer for agents.</p>
+
+  <p><strong>Diff-review focused (<a href="https://www.emdash.sh/">Emdash</a>)</strong> skips the interactive terminal entirely. Agents run as background processes, and you interact with their output through side-by-side diffs and PR creation tools. This makes "best-of-N" comparison workflows possible but means you can't interact with an agent mid-task.</p>
+
+  <p>It's worth noting that the CLI and TUI-based tools (Claude Squad, OMO) have a natural advantage here: they give you full, unmediated access to the underlying agents' own terminal interfaces. Many developers already live in these TUIs and have muscle memory for them — a GUI wrapper has to work hard to match that level of control.</p>
+
+  <h3>2. Platform Support</h3>
+
+  <p>This is a hard constraint for many teams. If your team runs mixed OSes, three tools in this list won't work for you at all:</p>
+
+  <ul>
+    <li><strong>Cross-platform (<a href="/">Foliage</a>, <a href="https://www.emdash.sh/">Emdash</a>, <a href="https://github.com/coder/mux">Mux</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>):</strong> macOS, Windows, and Linux. Teams with mixed OSes can standardize.</li>
+    <li><strong>macOS only (<a href="https://www.conductor.build/">Conductor</a>, <a href="https://superset.sh/">Superset</a>, <a href="https://air.dev/">JetBrains Air</a>):</strong> A significant limitation. JetBrains Air and Conductor both list Windows/Linux as "coming" but neither has shipped it.</li>
+    <li><strong>macOS/Linux only (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>):</strong> The tmux dependency makes Windows support impractical without WSL.</li>
+    <li><strong>CLI-anywhere (<a href="https://github.com/plandex-ai/plandex">Plandex</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>):</strong> Run anywhere you can install the binary, but no GUI.</li>
+  </ul>
+
+  <h3>3. Code Review Workflows</h3>
+
+  <p>Parallelism creates a review bottleneck. Running five agents means reviewing five sets of changes. Tools handle this very differently:</p>
+
+  <ul>
+    <li><strong>Built-in AI review (<a href="/">Foliage</a>):</strong> A two-phase review engine categorizes issues as BUG, SECURITY, STYLE, SUGGESTION, or NITPICK, then filters false positives before presenting results. PR review threads are surfaced inline, and agents can be automatically dispatched to address feedback.</li>
+    <li><strong>Post-execution review with codebase context (<a href="https://air.dev/">JetBrains Air</a>):</strong> Shows changes alongside the full codebase for context-aware review. No structured categorization, but you see the complete picture.</li>
+    <li><strong>Diff viewing (<a href="https://superset.sh/">Superset</a>, <a href="https://www.emdash.sh/">Emdash</a>, <a href="https://www.conductor.build/">Conductor</a>):</strong> Built-in diff viewers let you see what changed, but review is manual. Emdash's "best-of-N" feature lets you compare outputs from different agents on the same task.</li>
+    <li><strong>External review (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>, <a href="https://github.com/plandex-ai/plandex">Plandex</a>):</strong> No built-in review — use your existing code review tools (GitHub PRs, VS Code, etc.).</li>
+  </ul>
+
+  <h3>4. Openness and Licensing</h3>
+
+  <p>The licensing landscape in this category is unusually diverse:</p>
+
+  <ul>
+    <li><strong>MIT (<a href="https://www.emdash.sh/">Emdash</a>, <a href="https://github.com/plandex-ai/plandex">Plandex</a>):</strong> Most permissive. Use however you want, including commercial and redistribution.</li>
+    <li><strong>AGPL-3.0 (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/coder/mux">Mux</a>):</strong> Copyleft — if you modify and distribute, you must share source. Fine for internal use; may deter SaaS companies.</li>
+    <li><strong>ELv2 (<a href="https://superset.sh/">Superset</a>):</strong> Source-available but not OSI-approved open source. You can read the code and self-host, but can't offer it as a managed service.</li>
+    <li><strong>SUL-1.0 (<a href="https://github.com/code-yeongyu/oh-my-openagent">Oh My OpenAgent</a>):</strong> Free for personal and internal use. Can't resell or redistribute commercially.</li>
+    <li><strong>Closed source (<a href="/">Foliage</a>, <a href="https://www.conductor.build/">Conductor</a>, <a href="https://air.dev/">JetBrains Air</a>):</strong> No source code access. Foliage and Conductor are free to use; JetBrains Air requires a paid subscription.</li>
+  </ul>
+
+  <p>For teams evaluating tools, the key question is: if this tool is abandoned or pivots, can you fork it? With MIT and AGPL tools, yes. With closed-source tools (including Foliage, Conductor, and JetBrains Air), you're dependent on the vendor.</p>
+
+  <!-- How to Choose -->
+  <h2 id="how-to-choose">How to Choose</h2>
+
+  <p>There's no single best tool — the right choice depends on your specific constraints and workflow. Here's a quick decision guide:</p>
+
+  <ul class="decision-tree">
+    <li>
+      <span class="condition">macOS-native with real terminals and zero telemetry</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://superset.sh/">Superset</a></span> (source-available, privacy-focused)
+    </li>
+    <li>
+      <span class="condition">Terminal power user who lives in tmux</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a></span> (lightest orchestration layer)
+    </li>
+    <li>
+      <span class="condition">Cross-platform team with real terminal needs</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="/">Foliage</a></span> (real PTY on macOS/Win/Linux + code review)
+    </li>
+    <li>
+      <span class="condition">Agent diversity and best-of-N comparisons</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://www.emdash.sh/">Emdash</a></span> (23+ agents, side-by-side diffs)
+    </li>
+    <li>
+      <span class="condition">Enterprise with Docker/SSH isolation needs</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://github.com/coder/mux">Mux</a></span> (Docker, SSH, browser UI, audit logging)
+    </li>
+    <li>
+      <span class="condition">Agent framework hacker who wants maximum control</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://github.com/code-yeongyu/oh-my-openagent">Oh My OpenAgent</a></span> (11 agents, 46 hooks)
+    </li>
+    <li>
+      <span class="condition">Polished chat-first macOS experience</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://www.conductor.build/">Conductor</a></span> (clean UI, strong integrations)
+    </li>
+    <li>
+      <span class="condition">JetBrains ecosystem with structured task workflows</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://air.dev/">JetBrains Air</a></span> (precise context, ACP, enterprise backing)
+    </li>
+    <li>
+      <span class="condition">Browser-based access for remote teams</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://github.com/coder/mux">Mux</a></span> (the only tool with a web UI)
+    </li>
+    <li>
+      <span class="condition">Built-in AI code review loops</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="/">Foliage</a></span> (two-phase review, PR thread integration)
+    </li>
+  </ul>
+
+  <!-- Conclusion -->
+  <h2 id="conclusion">Conclusion</h2>
+
+  <p>The parallel AI coding tool space is young and competitive. Nine tools, no clear winner, and each one makes genuinely different tradeoffs. That's a good sign — it means the category is still being defined, and there's room for specialized tools to serve different workflows.</p>
+
+  <p>A few things are clear from surveying the field:</p>
+
+  <ul>
+    <li><strong>Platform support is a real divider.</strong> Three of the most popular tools are macOS-only. If your team includes Windows or Linux developers, your choices narrow to Foliage, Emdash, Mux, and OMO.</li>
+    <li><strong>Terminal philosophy is a matter of taste.</strong> Some developers want to interact with agents in real terminals. Others prefer reviewing diffs. Neither is wrong — but the tools make very different assumptions about which you want.</li>
+    <li><strong>The review bottleneck is unsolved.</strong> Running five agents is easy. Reviewing five agents' output thoughtfully is hard. Tools with built-in review workflows (Foliage's AI review, Emdash's best-of-N, JetBrains Air's codebase-context review) address this differently, but it remains the limiting factor in parallel development.</li>
+    <li><strong>Openness matters for longevity.</strong> In a fast-moving space where tools rise and fall quickly (Crystal's deprecation is a recent example), access to source code provides insurance against abandonment.</li>
+  </ul>
+
+  <p>All of these tools are iterating rapidly. JetBrains Air is still in public preview. Conductor ships weekly. Claude Squad just crossed 6,500 stars. The landscape in six months will look different. Pick the tool that fits your workflow <em>today</em>, but revisit your choice as the space evolves.</p>
+
+  <p>I vibe-built <a href="/">Foliage</a> because I wanted a tool tailored to my own needs and taste — real terminals running CLIs and TUIs, a tight code review loop, worktree management, and... window opacity controls. The feature set reflects that. If those priorities resonate with you, <a href="/#download">give it a try</a>. If not, one of the other eight tools on this list probably has what you need. Or build your own — with today's AI coding agents, it's easier than ever to scratch your own itch.</p>
+
+</article>
+
+<footer>
+  <span style="color: var(--green);">$</span> <span style="color: var(--text-bright);">echo</span> <span style="color: var(--green);">"Built using Foliage"</span>
+  <br>
+  <a href="mailto:hello@foliage.build">hello@foliage.build</a>
+</footer>
+
+<script data-goatcounter="https://foliage.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

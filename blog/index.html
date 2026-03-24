@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Blog | Foliage</title>
+  <meta name="description" content="Articles about parallel AI coding, git worktree workflows, and developer tooling from the Foliage team.">
+  <link rel="canonical" href="https://foliage.build/blog/">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog | Foliage">
+  <meta property="og:description" content="Articles about parallel AI coding, git worktree workflows, and developer tooling.">
+  <meta property="og:url" content="https://foliage.build/blog/">
+  <meta property="og:site_name" content="Foliage">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #282c34;
+      --bg-surface: #21252b;
+      --bg-gutter: #2c313a;
+      --bg-active: #3e4451;
+      --text: #abb2bf;
+      --text-muted: #5c6370;
+      --text-bright: #dcdfe4;
+      --accent: #61afef;
+      --accent-hover: #79bff5;
+      --green: #98c379;
+      --yellow: #e5c07b;
+      --red: #e06c75;
+      --purple: #c678dd;
+      --cyan: #56b6c2;
+      --orange: #d19a66;
+      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .nav-logo::before { content: "> "; color: var(--text-muted); }
+    .nav-logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); font-size: 13px; }
+    .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+
+    /* Page header */
+    .page-header {
+      padding: 60px 24px 32px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+
+    /* Post list */
+    .post-list {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+      list-style: none;
+    }
+    .post-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--bg-gutter);
+    }
+    .post-item:last-child { border-bottom: none; }
+    .post-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .post-title:hover { color: var(--accent-hover); }
+    .post-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .post-meta time { color: var(--text); }
+    .post-sep { margin: 0 8px; color: var(--bg-active); }
+    .post-excerpt { color: var(--text-muted); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-active);
+      padding: 20px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      nav { flex-direction: column; gap: 12px; }
+      .page-header { padding: 40px 16px 24px; }
+      .post-list { padding: 0 16px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">foliage</a>
+  <div class="nav-links">
+    <a href="/blog/">blog</a>
+    <a href="/#download" style="color: var(--accent);">download</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <h1>Blog</h1>
+</header>
+
+<ul class="post-list">
+  <li class="post-item">
+    <a href="/blog/best-parallel-ai-coding-tools-2026" class="post-title">The Best Tools for Running Parallel AI Coding Agents in 2026 — A Comprehensive Comparison</a>
+    <div class="post-meta">
+      <time datetime="2026-03-24">March 24, 2026</time>
+      <span class="post-sep">--</span>
+      <span class="post-excerpt">A fair comparison of 9 tools for orchestrating parallel AI coding sessions: desktop apps, TUI tools, and CLI frameworks.</span>
+    </div>
+  </li>
+</ul>
+
+<footer>
+  <span style="color: var(--green);">$</span> <span style="color: var(--text-bright);">echo</span> <span style="color: var(--green);">"Built using Foliage"</span>
+  <br>
+  <a href="mailto:hello@foliage.build">hello@foliage.build</a>
+</footer>
+
+<script data-goatcounter="https://foliage.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
