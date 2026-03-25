@@ -476,6 +476,11 @@
       <a href="latest/windows" class="download-link" onclick="downloadViaIframe(event)">.msi</a>
     </div>
   </div>
+  <p class="download-all-label" style="margin-top: 20px;">Or install with Homebrew (macOS &amp; Linux):</p>
+  <div class="install-box">
+    <code id="brew-cmd">brew tap wildhemp/foliage && brew install --cask foliage</code>
+    <button class="copy-btn" onclick="copyBrew()">copy</button>
+  </div>
 </section>
 
 <section>
@@ -546,6 +551,14 @@
 </footer>
 
 <script>
+function copyBrew() {
+  var cmd = document.getElementById('brew-cmd').textContent;
+  navigator.clipboard.writeText(cmd);
+  var btn = document.querySelector('.install-box .copy-btn');
+  btn.textContent = 'copied!';
+  setTimeout(function() { btn.textContent = 'copy'; }, 2000);
+}
+
 function downloadViaIframe(e) {
   e.preventDefault();
   var iframe = document.createElement('iframe');
@@ -585,6 +598,12 @@ function downloadViaIframe(e) {
     } else {
       detected = { id: 'dl-linux-x64', label: 'Download for Linux (x86_64)', sub: '.AppImage', href: 'latest/linux' };
     }
+  }
+
+  // Update brew command for Linux (formula, not cask)
+  if (/Linux/.test(platform) || /Linux/.test(ua)) {
+    var brewCmd = document.getElementById('brew-cmd');
+    if (brewCmd) brewCmd.textContent = 'brew tap wildhemp/foliage && brew install foliage';
   }
 
   if (detected) {
@@ -679,6 +698,10 @@ function downloadViaIframe(e) {
         '<span class="output">  <a href="latest/linux" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (x86_64)</a>                 .AppImage</span>',
         '<span class="output">  <a href="latest/linux-arm64" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (ARM64)</a>                  .AppImage</span>',
         '<span class="output">  <a href="latest/windows" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Windows (64-bit)</a>               .msi</span>',
+        '',
+        '<span class="output">Or install with <span class="highlight">Homebrew</span> (macOS &amp; Linux):</span>',
+        '',
+        '<span class="output">  brew tap wildhemp/foliage && brew install --cask foliage</span>',
         ''
       ];
     },
