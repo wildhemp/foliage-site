@@ -4,32 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>The Best Tools for Running Parallel AI Coding Agents in 2026 | Foliage Blog</title>
-  <meta name="description" content="A comprehensive comparison of 9 tools for running parallel AI coding agents: Foliage, JetBrains Air, Conductor, Superset, Emdash, Mux, Claude Squad, Oh My OpenAgent, and Plandex.">
-  <link rel="canonical" href="https://foliage.build/blog/best-parallel-ai-coding-tools-2026">
+  <title>Parallel AI Coding Tool Comparison | Foliage Blog</title>
+  <meta name="description" content="A comprehensive comparison of 10 tools for running parallel AI coding agents: Foliage, JetBrains Air, Conductor, Superset, Emdash, Mux, cmux, Claude Squad, Oh My OpenAgent, and Plandex.">
+  <link rel="canonical" href="https://foliage.build/blog/parallel-ai-coding-tool-comparison">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="The Best Tools for Running Parallel AI Coding Agents in 2026">
-  <meta property="og:description" content="A comprehensive comparison of 9 tools for orchestrating parallel AI coding sessions across git worktrees, terminals, and IDEs.">
-  <meta property="og:url" content="https://foliage.build/blog/best-parallel-ai-coding-tools-2026">
+  <meta property="og:title" content="Parallel AI Coding Tool Comparison">
+  <meta property="og:description" content="A comprehensive comparison of 10 tools for orchestrating parallel AI coding sessions across git worktrees, terminals, and IDEs.">
+  <meta property="og:url" content="https://foliage.build/blog/parallel-ai-coding-tool-comparison">
   <meta property="og:site_name" content="Foliage">
   <meta property="article:published_time" content="2026-03-24">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Best Tools for Running Parallel AI Coding Agents in 2026">
-  <meta name="twitter:description" content="9 tools compared: desktop apps, TUI tools, and CLI frameworks for parallel AI coding.">
+  <meta name="twitter:title" content="Parallel AI Coding Tool Comparison">
+  <meta name="twitter:description" content="10 tools compared: desktop apps, TUI tools, and CLI frameworks for parallel AI coding.">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "The Best Tools for Running Parallel AI Coding Agents in 2026 — A Comprehensive Comparison",
+    "headline": "Parallel AI Coding Tool Comparison",
     "datePublished": "2026-03-24",
     "author": { "@type": "Organization", "name": "Foliage", "url": "https://foliage.build" },
     "publisher": { "@type": "Organization", "name": "Foliage", "url": "https://foliage.build" },
-    "description": "A comprehensive comparison of 9 tools for running parallel AI coding agents.",
-    "mainEntityOfPage": "https://foliage.build/blog/best-parallel-ai-coding-tools-2026"
+    "description": "A comprehensive comparison of 10 tools for running parallel AI coding agents.",
+    "mainEntityOfPage": "https://foliage.build/blog/parallel-ai-coding-tool-comparison"
   }
   </script>
 
@@ -332,7 +332,7 @@
 </nav>
 
 <header class="article-header">
-  <h1>The Best Tools for Running Parallel AI Coding Agents in 2026 — A Comprehensive Comparison</h1>
+  <h1>Parallel AI Coding Tool Comparison</h1>
   <div class="article-meta">
     <time datetime="2026-03-24">March 24, 2026</time>
     <br>
@@ -359,14 +359,14 @@
 
   <p>2025 and 2026 brought a wave of CLI-based AI coding agents: <strong>Claude Code</strong>, <strong>Codex</strong>, <strong>Gemini CLI</strong>, and others. Each one can take a task description and write code autonomously in your terminal. They're powerful individually. The natural next step was obvious: what if you could run multiple agents in parallel, each on a different task, in isolated branches?</p>
 
-  <p>A new category of tools emerged to solve this problem. At least nine serious options now exist, ranging from polished desktop apps to lightweight TUI multiplexers to full CLI frameworks. JetBrains entered the space in March 2026 with <a href="https://air.dev/">Air</a>, bringing corporate backing and IDE expertise to a field previously dominated by indie developers and small startups.</p>
+  <p>A new category of tools emerged to solve this problem. At least ten serious options now exist, ranging from polished desktop apps to native terminal emulators to lightweight TUI multiplexers to full CLI frameworks. JetBrains entered the space in March 2026 with <a href="https://air.dev/">Air</a>, bringing corporate backing and IDE expertise to a field previously dominated by indie developers and small startups.</p>
 
   <p>This post compares them across several dimensions — <strong>platform support</strong>, <strong>terminal handling</strong>, <strong>agent flexibility</strong>, <strong>git isolation</strong>, <strong>code review</strong>, and <strong>openness</strong> — so you can decide which tradeoffs matter most to you. I built <a href="/">Foliage</a>, so I'm transparent about that, but this comparison is designed to be genuinely useful to anyone choosing a tool, not a sales pitch.</p>
 
   <!-- Landscape at a Glance -->
   <h2 id="landscape">The Landscape at a Glance</h2>
 
-  <p>Here's a quick summary of all nine tools before we go deep on each one. Scroll horizontally on mobile.</p>
+  <p>Here's a quick summary of all ten tools before we go deep on each one. Scroll horizontally on mobile.</p>
 
   <div class="comparison-table-wrap">
     <table class="comparison-table">
@@ -434,6 +434,15 @@
           <td>Claude, GPT, Grok, Ollama</td>
           <td class="check">Yes (+ Docker, SSH)</td>
           <td class="check">Embedded terminal</td>
+          <td>AGPL-3.0</td>
+        </tr>
+        <tr>
+          <td class="tool-name"><a href="https://cmux.com/">cmux</a></td>
+          <td>Native terminal</td>
+          <td>macOS only</td>
+          <td>Any CLI agent</td>
+          <td class="cross">No</td>
+          <td class="check">Yes (libghostty)</td>
           <td>AGPL-3.0</td>
         </tr>
         <tr>
@@ -642,6 +651,43 @@
     </div>
   </div>
 
+  <!-- cmux -->
+  <div class="tool-profile" id="cmux">
+    <div class="tool-header">
+      <a href="https://cmux.com/" class="tool-name">cmux</a>
+      <span class="tool-meta">Native Terminal / macOS only / AGPL-3.0 (+ commercial license) / by Manaflow (YC) / 10,000+ stars</span>
+    </div>
+    <p class="tool-tagline">A native macOS terminal emulator built from scratch in Swift on libghostty, purpose-built for running multiple AI coding agents. Not an orchestrator — the terminal itself.</p>
+
+    <h4>Strengths</h4>
+    <ul>
+      <li><strong>GPU-accelerated terminal</strong> built on <a href="https://ghostty.org/">libghostty</a> (same engine as Ghostty) — native macOS rendering, not Electron or xterm.js</li>
+      <li><strong>Notification rings:</strong> colored borders around panes show agent status at a glance (blue = needs attention, green = done, red = error). <code>Cmd+Shift+U</code> jumps to the newest unread notification</li>
+      <li><strong>Rich sidebar metadata:</strong> each tab shows git branch, working directory, listening ports, and latest notification text</li>
+      <li><strong>Built-in WebKit browser pane</strong> with a scriptable API — agents can snapshot the accessibility tree, click elements, evaluate JS, and manage cookies without Playwright</li>
+      <li><strong>Socket-based API:</strong> a Unix domain socket + <code>cmux</code> CLI enables programmatic control of everything — creating workspaces/splits, sending keystrokes, reading screen content, triggering notifications</li>
+      <li><strong>Agent-to-agent orchestration:</strong> agents can spawn child agents (<code>cmux new-split</code>), send commands to other panes (<code>cmux send</code>), and read their output (<code>cmux read-screen</code>)</li>
+      <li><strong>Agent-agnostic:</strong> works with Claude Code, Codex, OpenCode, Gemini CLI, Kiro, Aider, Goose, Amp, and any CLI tool</li>
+      <li>Ghostty config compatibility — reads existing <code>~/.config/ghostty/config</code> for fonts, themes, and colors</li>
+      <li><strong>Notable endorsements:</strong> Mitchell Hashimoto (Ghostty/HashiCorp), Nick Schrock (Dagster/GraphQL), Edward Grefenstette (Google DeepMind)</li>
+    </ul>
+
+    <h4>Limitations</h4>
+    <ul>
+      <li><strong>macOS only</strong> (14.0+) — native Swift/AppKit means no Linux or Windows</li>
+      <li><strong>No git worktree management</strong> — cmux provides the terminal environment but doesn't create or manage worktrees for you. You bring your own isolation strategy.</li>
+      <li><strong>No detach/reattach</strong> — unlike tmux, you can't detach a session and reconnect from another terminal or over SSH</li>
+      <li>Session restore recovers layout and metadata but <strong>live processes don't survive restarts</strong></li>
+      <li>macOS sandboxing can conflict with the Unix socket API — may need to be disabled</li>
+      <li>Young project (launched early 2026), 500+ open issues</li>
+      <li><strong>Philosophy: "a primitive, not a solution"</strong> — deliberately composable rather than opinionated, which means more setup for structured workflows</li>
+    </ul>
+
+    <div class="best-for">
+      <strong>Best for:</strong> macOS developers who want a purpose-built AI-aware terminal with GPU rendering and composable primitives, rather than an opinionated orchestration layer.
+    </div>
+  </div>
+
   <!-- Claude Squad -->
   <div class="tool-profile" id="claude-squad">
     <div class="tool-header">
@@ -790,6 +836,8 @@
 
   <p><strong>Real PTY terminals (<a href="/">Foliage</a>, <a href="https://superset.sh/">Superset</a>, <a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>)</strong> give agents access to actual terminal emulators. You can work on the terminal alongside the agent and run TUI programs like <code>vim</code> or <code>nvim</code> without issues. Foliage provides <em>two</em> terminals per worktree — one for the agent and one for you — so you don't have to fight the agent for terminal access.</p>
 
+  <p><strong>Native AI-aware terminal (<a href="https://cmux.com/">cmux</a>)</strong> takes a different approach: rather than wrapping terminals in an orchestration layer, it <em>is</em> the terminal. Built on libghostty with GPU-accelerated rendering, cmux provides notification rings, rich sidebar metadata, a scriptable socket API, and a built-in browser — all within a native macOS terminal emulator. Agents orchestrate themselves through composable CLI primitives rather than a centralized UI.</p>
+
   <p><strong>Chat-first (<a href="https://www.conductor.build/">Conductor</a>)</strong> renders agent output in chat bubbles with a supplementary terminal view. This is approachable for non-terminal users but means you lose the ability to interact with the agent's environment directly. Conductor had to rewrite its terminal implementation in v0.38 to address garbled text issues — a sign of the tension between chat and terminal paradigms.</p>
 
   <p><strong>Task-first with integrated tools (<a href="https://air.dev/">JetBrains Air</a>)</strong> takes a structured approach: define a task with precise code context, let the agent execute, then review results using a built-in terminal, Git client, and preview pane. It's neither chat-based nor terminal-first — more like a project management layer for agents.</p>
@@ -804,7 +852,7 @@
 
   <ul>
     <li><strong>Cross-platform (<a href="/">Foliage</a>, <a href="https://www.emdash.sh/">Emdash</a>, <a href="https://github.com/coder/mux">Mux</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>):</strong> macOS, Windows, and Linux. Teams with mixed OSes can standardize.</li>
-    <li><strong>macOS only (<a href="https://www.conductor.build/">Conductor</a>, <a href="https://superset.sh/">Superset</a>, <a href="https://air.dev/">JetBrains Air</a>):</strong> A significant limitation. JetBrains Air and Conductor both list Windows/Linux as "coming" but neither has shipped it.</li>
+    <li><strong>macOS only (<a href="https://www.conductor.build/">Conductor</a>, <a href="https://superset.sh/">Superset</a>, <a href="https://air.dev/">JetBrains Air</a>, <a href="https://cmux.com/">cmux</a>):</strong> A significant limitation. JetBrains Air and Conductor both list Windows/Linux as "coming" but neither has shipped it. cmux is native Swift/AppKit, making cross-platform support unlikely.</li>
     <li><strong>macOS/Linux only (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>):</strong> The tmux dependency makes Windows support impractical without WSL.</li>
     <li><strong>CLI-anywhere (<a href="https://github.com/plandex-ai/plandex">Plandex</a>, <a href="https://github.com/code-yeongyu/oh-my-openagent">OMO</a>):</strong> Run anywhere you can install the binary, but no GUI.</li>
   </ul>
@@ -826,7 +874,7 @@
 
   <ul>
     <li><strong>MIT (<a href="https://www.emdash.sh/">Emdash</a>, <a href="https://github.com/plandex-ai/plandex">Plandex</a>):</strong> Most permissive. Use however you want, including commercial and redistribution.</li>
-    <li><strong>AGPL-3.0 (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/coder/mux">Mux</a>):</strong> Copyleft — if you modify and distribute, you must share source. Fine for internal use; may deter SaaS companies.</li>
+    <li><strong>AGPL-3.0 (<a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a>, <a href="https://github.com/coder/mux">Mux</a>, <a href="https://cmux.com/">cmux</a>):</strong> Copyleft — if you modify and distribute, you must share source. Fine for internal use; may deter SaaS companies. cmux also offers a separate commercial license.</li>
     <li><strong>ELv2 (<a href="https://superset.sh/">Superset</a>):</strong> Source-available but not OSI-approved open source. You can read the code and self-host, but can't offer it as a managed service.</li>
     <li><strong>SUL-1.0 (<a href="https://github.com/code-yeongyu/oh-my-openagent">Oh My OpenAgent</a>):</strong> Free for personal and internal use. Can't resell or redistribute commercially.</li>
     <li><strong>Closed source (<a href="/">Foliage</a>, <a href="https://www.conductor.build/">Conductor</a>, <a href="https://air.dev/">JetBrains Air</a>):</strong> No source code access. Foliage and Conductor are free to use; JetBrains Air requires a paid subscription.</li>
@@ -849,6 +897,11 @@
       <span class="condition">Terminal power user who lives in tmux</span>
       <span class="arrow">&rarr;</span>
       <span class="recommendation"><a href="https://github.com/smtg-ai/claude-squad">Claude Squad</a></span> (lightest orchestration layer)
+    </li>
+    <li>
+      <span class="condition">macOS native GPU terminal with composable agent primitives</span>
+      <span class="arrow">&rarr;</span>
+      <span class="recommendation"><a href="https://cmux.com/">cmux</a></span> (libghostty, socket API, built-in browser)
     </li>
     <li>
       <span class="condition">Cross-platform team with real terminal needs</span>
@@ -895,12 +948,12 @@
   <!-- Conclusion -->
   <h2 id="conclusion">Conclusion</h2>
 
-  <p>The parallel AI coding tool space is young and competitive. Nine tools, no clear winner, and each one makes genuinely different tradeoffs. That's a good sign — it means the category is still being defined, and there's room for specialized tools to serve different workflows.</p>
+  <p>The parallel AI coding tool space is young and competitive. Ten tools, no clear winner, and each one makes genuinely different tradeoffs. That's a good sign — it means the category is still being defined, and there's room for specialized tools to serve different workflows.</p>
 
   <p>A few things are clear from surveying the field:</p>
 
   <ul>
-    <li><strong>Platform support is a real divider.</strong> Three of the most popular tools are macOS-only. If your team includes Windows or Linux developers, your choices narrow to Foliage, Emdash, Mux, and OMO.</li>
+    <li><strong>Platform support is a real divider.</strong> Four of the most popular tools are macOS-only. If your team includes Windows or Linux developers, your choices narrow to Foliage, Emdash, Mux, and OMO.</li>
     <li><strong>Terminal philosophy is a matter of taste.</strong> Some developers want to interact with agents in real terminals. Others prefer reviewing diffs. Neither is wrong — but the tools make very different assumptions about which you want.</li>
     <li><strong>The review bottleneck is unsolved.</strong> Running five agents is easy. Reviewing five agents' output thoughtfully is hard. Tools with built-in review workflows (Foliage's AI review, Emdash's best-of-N, JetBrains Air's codebase-context review) address this differently, but it remains the limiting factor in parallel development.</li>
     <li><strong>Openness matters for longevity.</strong> In a fast-moving space where tools rise and fall quickly (Crystal's deprecation is a recent example), access to source code provides insurance against abandonment.</li>
@@ -908,7 +961,7 @@
 
   <p>All of these tools are iterating rapidly. JetBrains Air is still in public preview. Conductor ships weekly. Claude Squad just crossed 6,500 stars. The landscape in six months will look different. Pick the tool that fits your workflow <em>today</em>, but revisit your choice as the space evolves.</p>
 
-  <p>I vibe-built <a href="/">Foliage</a> because I wanted a tool tailored to my own needs and taste — real terminals running CLIs and TUIs, a tight code review loop, worktree management, and... window opacity controls. The feature set reflects that. If those priorities resonate with you, <a href="/#download">give it a try</a>. If not, one of the other eight tools on this list probably has what you need. Or build your own — with today's AI coding agents, it's easier than ever to scratch your own itch.</p>
+  <p>I vibe-built <a href="/">Foliage</a> because I wanted a tool tailored to my own needs and taste — real terminals running CLIs and TUIs, a tight code review loop, worktree management, and... window opacity controls. The feature set reflects that. If those priorities resonate with you, <a href="/#download">give it a try</a>. If not, one of the other nine tools on this list probably has what you need. Or build your own — with today's AI coding agents, it's easier than ever to scratch your own itch.</p>
 
 </article>
 
