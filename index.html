@@ -1,888 +1,1272 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Foliage - Orchestrate Parallel AI Coding Sessions</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <meta name="description" content="Run a team of AI coding agents across git worktrees. Parallel terminals, live diffs, and code review in one desktop app.">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foliage - Orchestrate Parallel AI Coding Sessions</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta
+      name="description"
+      content="Run a team of AI coding agents across git worktrees. Parallel terminals, live diffs, and code review in one desktop app."
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    :root {
-      --bg: #282c34;
-      --bg-surface: #21252b;
-      --bg-gutter: #2c313a;
-      --bg-active: #3e4451;
-      --text: #abb2bf;
-      --text-muted: #5c6370;
-      --text-bright: #dcdfe4;
-      --accent: #61afef;
-      --accent-hover: #79bff5;
-      --green: #98c379;
-      --yellow: #e5c07b;
-      --red: #e06c75;
-      --purple: #c678dd;
-      --cyan: #56b6c2;
-      --orange: #d19a66;
-      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    }
+      :root {
+        --bg: #282c34;
+        --bg-surface: #21252b;
+        --bg-gutter: #2c313a;
+        --bg-active: #3e4451;
+        --text: #abb2bf;
+        --text-muted: #5c6370;
+        --text-bright: #dcdfe4;
+        --accent: #61afef;
+        --accent-hover: #79bff5;
+        --green: #98c379;
+        --yellow: #e5c07b;
+        --red: #e06c75;
+        --purple: #c678dd;
+        --cyan: #56b6c2;
+        --orange: #d19a66;
+        --mono:
+          "JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", "Consolas",
+          monospace;
+      }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 14px;
-      line-height: 1.7;
-    }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 14px;
+        line-height: 1.7;
+      }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
 
-    /* Terminal chrome */
-    .term {
-      background: var(--bg-surface);
-      border: 1px solid var(--bg-active);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .term-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: var(--bg-gutter);
-      border-bottom: 1px solid var(--bg-active);
-    }
-    .term-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-    .term-dot.r { background: var(--red); }
-    .term-dot.y { background: var(--yellow); }
-    .term-dot.g { background: var(--green); }
-    .term-title {
-      flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .term-body {
-      padding: 20px 24px;
-      overflow-x: auto;
-    }
+      /* Terminal chrome */
+      .term {
+        background: var(--bg-surface);
+        border: 1px solid var(--bg-active);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .term-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: var(--bg-gutter);
+        border-bottom: 1px solid var(--bg-active);
+      }
+      .term-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .term-dot.r {
+        background: var(--red);
+      }
+      .term-dot.y {
+        background: var(--yellow);
+      }
+      .term-dot.g {
+        background: var(--green);
+      }
+      .term-title {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .term-body {
+        padding: 20px 24px;
+        overflow-x: auto;
+      }
 
-    /* Prompt styling */
-    .prompt { color: var(--green); }
-    .cmd { color: var(--text-bright); }
-    .flag { color: var(--yellow); }
-    .arg { color: var(--orange); }
-    .comment { color: var(--text-muted); font-style: italic; }
-    .output { color: var(--text); }
-    .highlight { color: var(--accent); }
-    .str { color: var(--green); }
+      /* Prompt styling */
+      .prompt {
+        color: var(--green);
+      }
+      .cmd {
+        color: var(--text-bright);
+      }
+      .flag {
+        color: var(--yellow);
+      }
+      .arg {
+        color: var(--orange);
+      }
+      .comment {
+        color: var(--text-muted);
+        font-style: italic;
+      }
+      .output {
+        color: var(--text);
+      }
+      .highlight {
+        color: var(--accent);
+      }
+      .str {
+        color: var(--green);
+      }
 
-    /* Layout */
-    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+      /* Layout */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
 
-    /* Nav */
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 24px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .nav-logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--green);
-    }
-    .nav-logo::before { content: "> "; color: var(--text-muted); }
-    .nav-links { display: flex; gap: 20px; align-items: center; }
-    .nav-links a { color: var(--text-muted); font-size: 13px; }
-    .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+      /* Nav */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .nav-logo {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green);
+      }
+      .nav-logo::before {
+        content: "> ";
+        color: var(--text-muted);
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .nav-links a {
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+      .nav-links a:hover {
+        color: var(--text-bright);
+        text-decoration: none;
+      }
 
-    /* Hero */
-    .hero {
-      padding: 60px 24px 48px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .hero .term-body { line-height: 2; }
+      /* Hero */
+      .hero {
+        padding: 60px 24px 48px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .hero .term-body {
+        line-height: 2;
+      }
 
-    /* Sections */
-    section { max-width: 800px; margin: 0 auto; padding: 0 24px 48px; }
-    section h2 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-    section h2::before { content: "# "; color: var(--bg-active); }
+      /* Sections */
+      section {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+      }
+      section h2 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+      section h2::before {
+        content: "# ";
+        color: var(--bg-active);
+      }
 
-    /* Auto-detected download */
-    .download-auto {
-      margin-bottom: 16px;
-    }
-    .download-auto-btn {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 14px 20px;
-      background: var(--bg-gutter);
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      text-decoration: none;
-    }
-    .download-auto-btn:hover {
-      background: var(--accent);
-      color: var(--bg);
-      text-decoration: none;
-    }
-    .download-auto-btn .auto-sub {
-      display: block;
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    .download-auto-btn:hover .auto-sub {
-      color: var(--bg-active);
-    }
-    .download-all-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
+      /* Auto-detected download */
+      .download-auto {
+        margin-bottom: 16px;
+      }
+      .download-auto-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+        background: var(--bg-gutter);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        text-decoration: none;
+      }
+      .download-auto-btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+        text-decoration: none;
+      }
+      .download-auto-btn .auto-sub {
+        display: block;
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .download-auto-btn:hover .auto-sub {
+        color: var(--bg-active);
+      }
+      .download-all-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
 
-    /* Download section */
-    .download-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-    }
-    .download-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--bg-active);
-      border-radius: 6px;
-      padding: 16px;
-      transition: border-color 0.15s;
-    }
-    .download-card:hover { border-color: var(--accent); }
-    .download-card.detected { border-color: var(--accent); }
-    .download-card h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-bright);
-      margin-bottom: 2px;
-    }
-    .download-card .arch {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-    .download-link {
-      display: block;
-      text-align: center;
-      padding: 6px 12px;
-      background: var(--bg-gutter);
-      border: 1px solid var(--bg-active);
-      border-radius: 4px;
-      color: var(--accent);
-      font-size: 12px;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .download-link:hover {
-      background: var(--bg-active);
-      border-color: var(--accent);
-      text-decoration: none;
-    }
+      /* Download section */
+      .download-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+      .download-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--bg-active);
+        border-radius: 6px;
+        padding: 16px;
+        transition: border-color 0.15s;
+      }
+      .download-card:hover {
+        border-color: var(--accent);
+      }
+      .download-card.detected {
+        border-color: var(--accent);
+      }
+      .download-card h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-bright);
+        margin-bottom: 2px;
+      }
+      .download-card .arch {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+      .download-link {
+        display: block;
+        text-align: center;
+        padding: 6px 12px;
+        background: var(--bg-gutter);
+        border: 1px solid var(--bg-active);
+        border-radius: 4px;
+        color: var(--accent);
+        font-size: 12px;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+      .download-link:hover {
+        background: var(--bg-active);
+        border-color: var(--accent);
+        text-decoration: none;
+      }
 
-    /* Feature list (terminal-style) */
-    .feature-list { list-style: none; }
-    .feature-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid var(--bg-gutter);
-    }
-    .feature-list li:last-child { border-bottom: none; }
-    .feature-list .feat-name { color: var(--accent); }
-    .feature-list .feat-sep { color: var(--text-muted); margin: 0 8px; }
-    .feature-list .feat-desc { color: var(--text); }
+      /* Feature list (terminal-style) */
+      .feature-list {
+        list-style: none;
+      }
+      .feature-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--bg-gutter);
+      }
+      .feature-list li:last-child {
+        border-bottom: none;
+      }
+      .feature-list .feat-name {
+        color: var(--accent);
+      }
+      .feature-list .feat-sep {
+        color: var(--text-muted);
+        margin: 0 8px;
+      }
+      .feature-list .feat-desc {
+        color: var(--text);
+      }
 
-    /* How it works */
-    .steps-list { list-style: none; counter-reset: step; }
-    .steps-list li {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--bg-gutter);
-      display: flex;
-      gap: 12px;
-    }
-    .steps-list li:last-child { border-bottom: none; }
-    .steps-list .step-num {
-      color: var(--yellow);
-      font-weight: 700;
-      flex-shrink: 0;
-      width: 24px;
-    }
-    .steps-list .step-title { color: var(--text-bright); font-weight: 600; }
-    .steps-list .step-desc { color: var(--text); }
+      /* How it works */
+      .steps-list {
+        list-style: none;
+        counter-reset: step;
+      }
+      .steps-list li {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--bg-gutter);
+        display: flex;
+        gap: 12px;
+      }
+      .steps-list li:last-child {
+        border-bottom: none;
+      }
+      .steps-list .step-num {
+        color: var(--yellow);
+        font-weight: 700;
+        flex-shrink: 0;
+        width: 24px;
+      }
+      .steps-list .step-title {
+        color: var(--text-bright);
+        font-weight: 600;
+      }
+      .steps-list .step-desc {
+        color: var(--text);
+      }
 
-    /* Install command */
-    .install-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--bg-active);
-      border-radius: 6px;
-      padding: 16px 20px;
-      margin-top: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .install-box code { flex: 1; color: var(--text-bright); }
-    .install-box .copy-btn {
-      background: none;
-      border: 1px solid var(--bg-active);
-      color: var(--text-muted);
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: var(--mono);
-      font-size: 11px;
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .install-box .copy-btn:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
+      /* Install command */
+      .install-box {
+        background: var(--bg-surface);
+        border: 1px solid var(--bg-active);
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .install-box code {
+        flex: 1;
+        color: var(--text-bright);
+      }
+      .install-box .copy-btn {
+        background: none;
+        border: 1px solid var(--bg-active);
+        color: var(--text-muted);
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 11px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .install-box .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
 
-    /* Screenshots */
-    .section-screenshots { max-width: 1000px; }
-    .screenshot-preview {
-      border: 1px solid var(--bg-active);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .screenshot-preview:hover { border-color: var(--accent); }
-    .screenshot-preview img {
-      width: 100%;
-      display: block;
-    }
+      /* Screenshots */
+      .section-screenshots {
+        max-width: 1000px;
+      }
+      .screenshot-preview {
+        border: 1px solid var(--bg-active);
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+      .screenshot-preview:hover {
+        border-color: var(--accent);
+      }
+      .screenshot-preview img {
+        width: 100%;
+        display: block;
+      }
 
-    /* Lightbox carousel */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.9);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .lightbox.open { display: flex; }
-    .lightbox-img-wrap {
-      position: relative;
-      max-width: 95vw;
-      max-height: 85vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .lightbox-img-wrap img {
-      max-width: 95vw;
-      max-height: 85vh;
-      border-radius: 8px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-      transition: opacity 0.2s;
-    }
-    .lightbox-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--bg-gutter);
-      border: 1px solid var(--bg-active);
-      color: var(--text-bright);
-      font-family: var(--mono);
-      font-size: 20px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, border-color 0.15s;
-      z-index: 1;
-    }
-    .lightbox-nav:hover {
-      background: var(--bg-active);
-      border-color: var(--accent);
-    }
-    .lightbox-prev { left: -56px; }
-    .lightbox-next { right: -56px; }
-    .lightbox-dots {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-    }
-    .lightbox-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-muted);
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .lightbox-dot.active { background: var(--accent); }
-    .lightbox-close {
-      position: absolute;
-      top: 16px;
-      right: 24px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 24px;
-      cursor: pointer;
-      font-family: var(--mono);
-      transition: color 0.15s;
-    }
-    .lightbox-close:hover { color: var(--text-bright); }
-    @media (max-width: 640px) {
-      .lightbox-prev { left: 8px; }
-      .lightbox-next { right: 8px; }
-      .lightbox-nav { width: 32px; height: 32px; font-size: 16px; }
-    }
-
-    @media (max-width: 640px) {
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--bg-active);
-      padding: 20px 24px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 12px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* Cursor blink */
-    .cursor {
-      display: inline-block;
-      width: 8px;
-      height: 16px;
-      background: var(--text-bright);
-      vertical-align: text-bottom;
-      animation: blink 1s step-end infinite;
-      margin-left: 2px;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-
-    /* Responsive */
-    @media (max-width: 640px) {
-      .download-grid { grid-template-columns: repeat(2, 1fr); }
-      .download-auto-btn { font-size: 13px; padding: 12px 16px; }
-      nav { flex-direction: column; gap: 12px; }
-      .hero { padding: 40px 16px 32px; }
-      section { padding: 0 16px 36px; }
-      .term-body { padding: 16px; font-size: 13px; }
-    }
-  </style>
-</head>
-<body>
-
-<nav>
-  <div class="nav-logo">foliage</div>
-  <div class="nav-links">
-    <a href="/blog/">blog</a>
-    <a href="#download" style="color: var(--accent);">download</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="term">
-    <div class="term-bar">
-      <span class="term-dot r"></span>
-      <span class="term-dot y"></span>
-      <span class="term-dot g"></span>
-      <span class="term-title">foliage</span>
-    </div>
-    <div class="term-body" id="hero-term" tabindex="0" style="cursor: text; outline: none; height: 430px; overflow-y: auto;">
-      <div id="term-history"></div>
-      <div id="term-input-line"><span class="prompt">$</span> <span id="term-input" class="cmd"></span><span class="cursor"></span><span id="term-hint" class="comment" style="pointer-events:none; margin-left: 8px;"></span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section-screenshots">
-  <div class="screenshot-preview" onclick="openLightbox(0)">
-    <img src="image_generic.png" alt="Foliage - worktree view with agent terminal, user terminal, and changes panel">
-  </div>
-</section>
-
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-  <div class="lightbox-img-wrap">
-    <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&lsaquo;</button>
-    <img id="lightbox-img" src="" alt="">
-    <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">&rsaquo;</button>
-  </div>
-  <div class="lightbox-dots" id="lightbox-dots"></div>
-</div>
-
-<section>
-  <h2 id="download">Download</h2>
-  <div class="download-auto" id="download-auto"></div>
-  <p class="download-all-label">All platforms:</p>
-  <div class="download-grid">
-    <div class="download-card" id="dl-macos-arm">
-      <h3>macOS</h3>
-      <p class="arch">Apple Silicon</p>
-      <a href="latest/macos" class="download-link" onclick="downloadViaIframe(event)">.dmg</a>
-    </div>
-    <div class="download-card" id="dl-macos-intel">
-      <h3>macOS</h3>
-      <p class="arch">Intel</p>
-      <a href="latest/macos-intel" class="download-link" onclick="downloadViaIframe(event)">.dmg</a>
-    </div>
-    <div class="download-card" id="dl-linux-x64">
-      <h3>Linux</h3>
-      <p class="arch">x86_64</p>
-      <a href="latest/linux" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
-    </div>
-    <div class="download-card" id="dl-linux-arm">
-      <h3>Linux</h3>
-      <p class="arch">ARM64 / aarch64</p>
-      <a href="latest/linux-arm64" class="download-link" onclick="downloadViaIframe(event)">.AppImage</a>
-    </div>
-    <div class="download-card" id="dl-windows">
-      <h3>Windows</h3>
-      <p class="arch">64-bit installer</p>
-      <a href="latest/windows" class="download-link" onclick="downloadViaIframe(event)">.msi</a>
-    </div>
-  </div>
-  <p class="download-all-label" style="margin-top: 20px;">Or install with Homebrew (macOS &amp; Linux):</p>
-  <div class="install-box">
-    <code id="brew-cmd">brew tap wildhemp/foliage && brew install --cask foliage</code>
-    <button class="copy-btn" onclick="copyBrew()">copy</button>
-  </div>
-</section>
-
-<section>
-  <h2>Features</h2>
-  <div class="term">
-    <div class="term-bar">
-      <span class="term-dot r"></span>
-      <span class="term-dot y"></span>
-      <span class="term-dot g"></span>
-      <span class="term-title">foliage --features</span>
-    </div>
-    <div class="term-body">
-      <ul class="feature-list">
-        <li><span class="feat-name">parallel-worktrees</span><span class="feat-sep">--</span><span class="feat-desc">Spin up isolated git worktrees, run independent agents on each</span></li>
-        <li><span class="feat-name">real-terminals</span><span class="feat-sep">--</span><span class="feat-desc">Full xterm.js PTY terminals, not sandboxed environments</span></li>
-        <li><span class="feat-name">multi-agent</span><span class="feat-sep">--</span><span class="feat-desc">Claude Code, Codex, and Gemini CLI per worktree, each with own context</span></li>
-        <li><span class="feat-name">task-import</span><span class="feat-sep">--</span><span class="feat-desc">Pull tasks from any MCP server (Linear, GitHub Issues, Jira, etc.) and batch-create worktrees</span></li>
-        <li><span class="feat-name">live-diffs</span><span class="feat-sep">--</span><span class="feat-desc">Lines added/deleted, PR status, uncommitted and unpushed counts</span></li>
-        <li><span class="feat-name">diff-viewer</span><span class="feat-sep">--</span><span class="feat-desc">Split or unified diffs with per-file change tracking</span></li>
-        <li><span class="feat-name">pr-workflow</span><span class="feat-sep">--</span><span class="feat-desc">Create PRs, view review threads, and reply — all inline</span></li>
-        <li><span class="feat-name">code-review</span><span class="feat-sep">--</span><span class="feat-desc">Built-in AI-powered structured code review panel</span></li>
-        <li><span class="feat-name">open-in-ide</span><span class="feat-sep">--</span><span class="feat-desc">Open any worktree in VS Code, Cursor, IntelliJ, Zed, and more</span></li>
-        <li><span class="feat-name">prompt-editor</span><span class="feat-sep">--</span><span class="feat-desc">Markdown prompt editor for composing agent messages</span></li>
-        <li><span class="feat-name">themes</span><span class="feat-sep">--</span><span class="feat-desc">13 color themes with adjustable window transparency</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>How it works</h2>
-  <ol class="steps-list">
-    <li>
-      <span class="step-num">[1]</span>
-      <div>
-        <div class="step-title">Open a repository</div>
-        <div class="step-desc">Point Foliage at any git repo. It discovers existing worktrees automatically.</div>
-      </div>
-    </li>
-    <li>
-      <span class="step-num">[2]</span>
-      <div>
-        <div class="step-title">Create worktrees</div>
-        <div class="step-desc">Spin up new branches as isolated worktrees. Each gets its own agent and user terminal.</div>
-      </div>
-    </li>
-    <li>
-      <span class="step-num">[3]</span>
-      <div>
-        <div class="step-title">Deploy agents</div>
-        <div class="step-desc">Agents start working in parallel. Monitor progress, review changes, and ship faster.</div>
-      </div>
-    </li>
-    <li>
-      <span class="step-num">[*]</span>
-      <div>
-        <div class="step-title">Uses your existing CLI agents</div>
-        <div class="step-desc">Foliage runs Claude Code, Codex, and Gemini CLI directly — just install them as you normally would. No wrappers, no API keys to configure.</div>
-      </div>
-    </li>
-  </ol>
-</section>
-
-<footer>
-  <span class="prompt">$</span> <span class="cmd">echo</span> <span class="str">"Built using Foliage"</span>
-  <br>
-  <a href="mailto:hello@foliage.build">hello@foliage.build</a>
-</footer>
-
-<script>
-function copyBrew() {
-  var cmd = document.getElementById('brew-cmd').textContent;
-  navigator.clipboard.writeText(cmd);
-  var btn = document.querySelector('.install-box .copy-btn');
-  btn.textContent = 'copied!';
-  setTimeout(function() { btn.textContent = 'copy'; }, 2000);
-}
-
-function downloadViaIframe(e) {
-  e.preventDefault();
-  var iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = e.currentTarget.href;
-  document.body.appendChild(iframe);
-  setTimeout(function() { document.body.removeChild(iframe); }, 60000);
-}
-
-(function() {
-  var ua = navigator.userAgent;
-  var platform = navigator.platform || '';
-  var detected = null;
-
-  if (/Mac/.test(platform)) {
-    // Check for Apple Silicon via WebGL renderer or default to Apple Silicon
-    try {
-      var canvas = document.createElement('canvas');
-      var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      if (gl) {
-        var dbg = gl.getExtension('WEBGL_debug_renderer_info');
-        var renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
-        if (/Intel/.test(renderer)) {
-          detected = { id: 'dl-macos-intel', label: 'Download for macOS (Intel)', sub: '.dmg', href: 'latest/macos-intel' };
+      /* Lightbox carousel */
+      .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.9);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox-img-wrap {
+        position: relative;
+        max-width: 95vw;
+        max-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .lightbox-img-wrap img {
+        max-width: 95vw;
+        max-height: 85vh;
+        border-radius: 8px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        transition: opacity 0.2s;
+      }
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--bg-gutter);
+        border: 1px solid var(--bg-active);
+        color: var(--text-bright);
+        font-family: var(--mono);
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        z-index: 1;
+      }
+      .lightbox-nav:hover {
+        background: var(--bg-active);
+        border-color: var(--accent);
+      }
+      .lightbox-prev {
+        left: -56px;
+      }
+      .lightbox-next {
+        right: -56px;
+      }
+      .lightbox-dots {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .lightbox-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .lightbox-dot.active {
+        background: var(--accent);
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 16px;
+        right: 24px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        font-family: var(--mono);
+        transition: color 0.15s;
+      }
+      .lightbox-close:hover {
+        color: var(--text-bright);
+      }
+      @media (max-width: 640px) {
+        .lightbox-prev {
+          left: 8px;
+        }
+        .lightbox-next {
+          right: 8px;
+        }
+        .lightbox-nav {
+          width: 32px;
+          height: 32px;
+          font-size: 16px;
         }
       }
-    } catch(e) {}
-    if (!detected) {
-      detected = { id: 'dl-macos-arm', label: 'Download for macOS (Apple Silicon)', sub: '.dmg', href: 'latest/macos' };
-    }
-  } else if (/Win/.test(platform)) {
-    detected = { id: 'dl-windows', label: 'Download for Windows', sub: '.msi, 64-bit', href: 'latest/windows' };
-  } else if (/Linux/.test(platform) || /Linux/.test(ua)) {
-    // Check for ARM64
-    if (/aarch64|arm64/i.test(ua) || /aarch64|arm64/i.test(platform)) {
-      detected = { id: 'dl-linux-arm', label: 'Download for Linux (ARM64)', sub: '.AppImage', href: 'latest/linux-arm64' };
-    } else {
-      detected = { id: 'dl-linux-x64', label: 'Download for Linux (x86_64)', sub: '.AppImage', href: 'latest/linux' };
-    }
-  }
 
-  // Update brew command for Linux (formula, not cask)
-  if (/Linux/.test(platform) || /Linux/.test(ua)) {
-    var brewCmd = document.getElementById('brew-cmd');
-    if (brewCmd) brewCmd.textContent = 'brew tap wildhemp/foliage && brew install foliage';
-  }
-
-  if (detected) {
-    var container = document.getElementById('download-auto');
-    var btn = document.createElement('a');
-    btn.href = detected.href;
-    btn.className = 'download-auto-btn';
-    btn.onclick = downloadViaIframe;
-    btn.innerHTML = detected.label + '<span class="auto-sub">' + detected.sub + '</span>';
-    container.appendChild(btn);
-
-    var card = document.getElementById(detected.id);
-    if (card) card.classList.add('detected');
-  }
-})();
-
-// Interactive hero terminal
-(function() {
-  var term = document.getElementById('hero-term');
-  var history = document.getElementById('term-history');
-  var inputEl = document.getElementById('term-input');
-  var inputLine = document.getElementById('term-input-line');
-  var cmdInput = '';
-  var cmdHistory = [];
-  var historyIndex = -1;
-  var hintEl = document.getElementById('term-hint');
-
-  function updateHint() {
-    hintEl.textContent = cmdInput === '' ? 'try foliage --about' : '';
-  }
-
-  var commands = {
-    'foliage --about': function() {
-      return [
-        '',
-        '<span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span>',
-        '<span class="output">across git worktrees.</span>',
-        '',
-        '<span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span>',
-        '<span class="comment"># branches with real terminals, live diffs,</span>',
-        '<span class="comment"># and built-in code review.</span>',
-        ''
-      ];
-    },
-    'foliage --platforms': function() {
-      return [
-        '<span class="output">  macOS (Apple Silicon + Intel)</span>',
-        '<span class="output">  Linux (AppImage, .deb)</span>',
-        '<span class="output">  Windows (.msi, .exe)</span>',
-        ''
-      ];
-    },
-    'foliage --features': function() {
-      return [
-        '<span class="output">  <span class="highlight">parallel-worktrees</span>  Spin up isolated git worktrees, run independent agents on each</span>',
-        '<span class="output">  <span class="highlight">real-terminals</span>      Full xterm.js PTY terminals, not sandboxed environments</span>',
-        '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI per worktree, each with own context</span>',
-        '<span class="output">  <span class="highlight">task-import</span>         Pull tasks from any MCP server (Linear, GitHub, Jira, etc.) and batch-create worktrees</span>',
-        '<span class="output">  <span class="highlight">live-diffs</span>          Lines added/deleted, PR status, uncommitted and unpushed counts</span>',
-        '<span class="output">  <span class="highlight">diff-viewer</span>         Split or unified diffs with per-file change tracking</span>',
-        '<span class="output">  <span class="highlight">pr-workflow</span>         Create PRs, view review threads, and reply — all inline</span>',
-        '<span class="output">  <span class="highlight">code-review</span>         Built-in AI-powered structured code review panel</span>',
-        '<span class="output">  <span class="highlight">open-in-ide</span>         Open any worktree in VS Code, Cursor, IntelliJ, Zed, and more</span>',
-        '<span class="output">  <span class="highlight">prompt-editor</span>       Markdown prompt editor for composing agent messages</span>',
-        '<span class="output">  <span class="highlight">themes</span>              13 color themes with adjustable window transparency</span>',
-        ''
-      ];
-    },
-    'foliage --help': function() {
-      return [
-        '',
-        '<span class="output"><span class="highlight">foliage</span> - Orchestrate parallel AI coding sessions</span>',
-        '',
-        '<span class="output">Usage: foliage [OPTIONS]</span>',
-        '',
-        '<span class="output">Options:</span>',
-        '<span class="output">  <span class="flag">--about</span>       What is Foliage?</span>',
-        '<span class="output">  <span class="flag">--platforms</span>   Supported platforms</span>',
-        '<span class="output">  <span class="flag">--features</span>   List features</span>',
-        '<span class="output">  <span class="flag">--download</span>    Download links</span>',
-        '<span class="output">  <span class="flag">--help</span>        Show this help message</span>',
-        ''
-      ];
-    },
-    'foliage --download': function() {
-      return [
-        '',
-        '<span class="output">Available downloads:</span>',
-        '',
-        '<span class="output">  <a href="latest/macos" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Apple Silicon)</a>          .dmg</span>',
-        '<span class="output">  <a href="latest/macos-intel" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Intel)</a>                  .dmg</span>',
-        '<span class="output">  <a href="latest/linux" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (x86_64)</a>                 .AppImage</span>',
-        '<span class="output">  <a href="latest/linux-arm64" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (ARM64)</a>                  .AppImage</span>',
-        '<span class="output">  <a href="latest/windows" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Windows (64-bit)</a>               .msi</span>',
-        '',
-        '<span class="output">Or install with <span class="highlight">Homebrew</span> (macOS &amp; Linux):</span>',
-        '',
-        '<span class="output">  brew tap wildhemp/foliage && brew install --cask foliage</span>',
-        ''
-      ];
-    },
-    'help': function() {
-      return commands['foliage --help']();
-    },
-    'clear': 'clear'
-  };
-
-  function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  function appendLines(lines) {
-    for (var i = 0; i < lines.length; i++) {
-      var div = document.createElement('div');
-      if (lines[i] === '') {
-        div.innerHTML = '&nbsp;';
-      } else {
-        div.innerHTML = lines[i];
+      @media (max-width: 640px) {
       }
-      history.appendChild(div);
-    }
-  }
 
-  function appendPrompt(cmd) {
-    var div = document.createElement('div');
-    var escaped = escapeHtml(cmd);
-    // Highlight foliage commands
-    if (/^foliage\s/.test(cmd)) {
-      var parts = cmd.split(/\s+/);
-      var highlighted = '<span class="cmd">' + escapeHtml(parts[0]) + '</span>';
-      for (var i = 1; i < parts.length; i++) {
-        if (parts[i].indexOf('--') === 0) {
-          highlighted += ' <span class="flag">' + escapeHtml(parts[i]) + '</span>';
-        } else {
-          highlighted += ' ' + escapeHtml(parts[i]);
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--bg-active);
+        padding: 20px 24px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 12px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      /* Cursor blink */
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: var(--text-bright);
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+        margin-left: 2px;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
         }
       }
-      div.innerHTML = '<span class="prompt">$</span> ' + highlighted;
-    } else {
-      div.innerHTML = '<span class="prompt">$</span> <span class="cmd">' + escaped + '</span>';
-    }
-    history.appendChild(div);
-  }
 
-  function runCommand(cmd) {
-    var trimmed = cmd.trim();
-    appendPrompt(trimmed);
-
-    if (trimmed === '') {
-      // no-op
-    } else if (commands[trimmed] === 'clear') {
-      history.innerHTML = '';
-    } else if (commands[trimmed]) {
-      appendLines(commands[trimmed]());
-    } else if (trimmed === 'foliage' || /^foliage\s/.test(trimmed)) {
-      // Unknown foliage subcommand — show help
-      if (trimmed !== 'foliage') {
-        var flag = trimmed.replace(/^foliage\s*/, '');
-        var errDiv = document.createElement('div');
-        errDiv.innerHTML = '<span class="output">foliage: unknown option: ' + escapeHtml(flag) + '</span>';
-        history.appendChild(errDiv);
+      /* Responsive */
+      @media (max-width: 640px) {
+        .download-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .download-auto-btn {
+          font-size: 13px;
+          padding: 12px 16px;
+        }
+        nav {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .hero {
+          padding: 40px 16px 32px;
+        }
+        section {
+          padding: 0 16px 36px;
+        }
+        .term-body {
+          padding: 16px;
+          font-size: 13px;
+        }
       }
-      appendLines(commands['foliage --help']());
-    } else {
-      // bash-style error
-      var argv = trimmed.split(/\s+/);
-      var div = document.createElement('div');
-      div.innerHTML = '<span class="output">bash: ' + escapeHtml(argv[0]) + ': command not found</span>';
-      history.appendChild(div);
-      var hint = document.createElement('div');
-      hint.innerHTML = '<span class="comment"># Try: foliage --help</span>';
-      history.appendChild(hint);
-    }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-logo">foliage</div>
+      <div class="nav-links">
+        <a href="/blog/">blog</a>
+        <a href="#download" style="color: var(--accent)">download</a>
+      </div>
+    </nav>
 
-    if (trimmed !== '') {
-      cmdHistory.unshift(trimmed);
-    }
-    historyIndex = -1;
-    cmdInput = '';
-    inputEl.textContent = '';
-    updateHint();
-    scrollToBottom();
-  }
+    <section class="hero">
+      <div class="term">
+        <div class="term-bar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-title">foliage</span>
+        </div>
+        <div
+          class="term-body"
+          id="hero-term"
+          tabindex="0"
+          style="cursor: text; outline: none; height: 430px; overflow-y: auto"
+        >
+          <div id="term-history"></div>
+          <div id="term-input-line">
+            <span class="prompt">$</span>
+            <span id="term-input" class="cmd"></span><span class="cursor"></span
+            ><span
+              id="term-hint"
+              class="comment"
+              style="pointer-events: none; margin-left: 8px"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  function scrollToBottom() {
-    term.scrollTop = term.scrollHeight;
-  }
+    <section class="section-screenshots">
+      <div class="screenshot-preview" onclick="openLightbox(0)">
+        <img
+          src="image_generic.png"
+          alt="Foliage - worktree view with agent terminal, user terminal, and changes panel"
+        />
+      </div>
+    </section>
 
-  // Boot: run initial command
-  runCommand('foliage --help');
-  updateHint();
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <div class="lightbox-img-wrap">
+        <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">
+          &lsaquo;
+        </button>
+        <img id="lightbox-img" src="" alt="" />
+        <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">
+          &rsaquo;
+        </button>
+      </div>
+      <div class="lightbox-dots" id="lightbox-dots"></div>
+    </div>
 
-  // Focus terminal on click
-  term.addEventListener('click', function() {
-    term.focus();
-  });
+    <section>
+      <h2 id="download">Download</h2>
+      <div class="download-auto" id="download-auto"></div>
+      <p class="download-all-label">All platforms:</p>
+      <div class="download-grid">
+        <div class="download-card" id="dl-macos-arm">
+          <h3>macOS</h3>
+          <p class="arch">Apple Silicon</p>
+          <a
+            href="latest/macos"
+            class="download-link"
+            onclick="downloadViaIframe(event)"
+            >.dmg</a
+          >
+        </div>
+        <div class="download-card" id="dl-macos-intel">
+          <h3>macOS</h3>
+          <p class="arch">Intel</p>
+          <a
+            href="latest/macos-intel"
+            class="download-link"
+            onclick="downloadViaIframe(event)"
+            >.dmg</a
+          >
+        </div>
+        <div class="download-card" id="dl-linux-x64">
+          <h3>Linux</h3>
+          <p class="arch">x86_64</p>
+          <a
+            href="latest/linux"
+            class="download-link"
+            onclick="downloadViaIframe(event)"
+            >.AppImage</a
+          >
+        </div>
+        <div class="download-card" id="dl-linux-arm">
+          <h3>Linux</h3>
+          <p class="arch">ARM64 / aarch64</p>
+          <a
+            href="latest/linux-arm64"
+            class="download-link"
+            onclick="downloadViaIframe(event)"
+            >.AppImage</a
+          >
+        </div>
+        <div class="download-card" id="dl-windows">
+          <h3>Windows</h3>
+          <p class="arch">64-bit installer</p>
+          <a
+            href="latest/windows"
+            class="download-link"
+            onclick="downloadViaIframe(event)"
+            >.msi</a
+          >
+        </div>
+      </div>
+      <p class="download-all-label" style="margin-top: 20px">
+        Or install with Homebrew (macOS &amp; Linux):
+      </p>
+      <div class="install-box">
+        <code id="brew-cmd"
+          >brew tap wildhemp/foliage && brew install --cask foliage</code
+        >
+        <button class="copy-btn" onclick="copyBrew()">copy</button>
+      </div>
+    </section>
 
-  // Keyboard handling
-  term.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      runCommand(cmdInput);
-    } else if (e.key === 'Backspace') {
-      e.preventDefault();
-      cmdInput = cmdInput.slice(0, -1);
-      inputEl.textContent = cmdInput;
-      updateHint();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
-        historyIndex++;
-        cmdInput = cmdHistory[historyIndex];
-        inputEl.textContent = cmdInput;
+    <section>
+      <h2>Features</h2>
+      <div class="term">
+        <div class="term-bar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-title">foliage --features</span>
+        </div>
+        <div class="term-body">
+          <ul class="feature-list">
+            <li>
+              <span class="feat-name">parallel-worktrees</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Spin up isolated git worktrees, run independent agents on
+                each</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">real-terminals</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Full xterm.js PTY terminals, not sandboxed environments</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">multi-agent</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Claude Code, Codex, and Gemini CLI per worktree, each with own
+                context</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">task-import</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Pull tasks from any MCP server (Linear, GitHub Issues, Jira,
+                etc.) and batch-create worktrees</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">live-diffs</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Lines added/deleted, PR status, uncommitted and unpushed
+                counts</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">diff-viewer</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Split or unified diffs with per-file change tracking</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">pr-workflow</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Create PRs, view review threads, and reply — all inline</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">code-review</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Built-in AI-powered structured code review panel</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">auto-rebase</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Automatically rebase on main and resolve conflicts before
+                creating PRs</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">notifications</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Three-tier agent notifications — know when tasks finish or need
+                attention</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">ci-checks</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >GitHub CI check results directly in the PR panel</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">personas</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Configurable agent personas to set tone and style per
+                session</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">setup-scripts</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Repository-specific setup scripts run automatically on worktree
+                creation</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">open-in-ide</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Open any worktree in VS Code, Cursor, IntelliJ, Zed, and
+                more</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">prompt-editor</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Markdown prompt editor for composing agent messages</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">themes</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >13 color themes with adjustable window transparency</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <ol class="steps-list">
+        <li>
+          <span class="step-num">[1]</span>
+          <div>
+            <div class="step-title">Open a repository</div>
+            <div class="step-desc">
+              Point Foliage at any git repo. It discovers existing worktrees
+              automatically.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">[2]</span>
+          <div>
+            <div class="step-title">Create worktrees</div>
+            <div class="step-desc">
+              Spin up new branches as isolated worktrees. Each gets its own
+              agent and user terminal.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">[3]</span>
+          <div>
+            <div class="step-title">Deploy agents</div>
+            <div class="step-desc">
+              Agents start working in parallel. Monitor progress, review
+              changes, and ship faster.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">[*]</span>
+          <div>
+            <div class="step-title">Uses your existing CLI agents</div>
+            <div class="step-desc">
+              Foliage runs Claude Code, Codex, and Gemini CLI directly — just
+              install them as you normally would. No wrappers, no API keys to
+              configure.
+            </div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <footer>
+      <span class="prompt">$</span> <span class="cmd">echo</span>
+      <span class="str">"Built using Foliage"</span>
+      <br />
+      <a href="mailto:hello@foliage.build">hello@foliage.build</a>
+    </footer>
+
+    <script>
+      function copyBrew() {
+        var cmd = document.getElementById("brew-cmd").textContent;
+        navigator.clipboard.writeText(cmd);
+        var btn = document.querySelector(".install-box .copy-btn");
+        btn.textContent = "copied!";
+        setTimeout(function () {
+          btn.textContent = "copy";
+        }, 2000);
       }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (historyIndex > 0) {
-        historyIndex--;
-        cmdInput = cmdHistory[historyIndex];
-        inputEl.textContent = cmdInput;
-      } else {
-        historyIndex = -1;
-        cmdInput = '';
-        inputEl.textContent = '';
+
+      function downloadViaIframe(e) {
+        e.preventDefault();
+        var iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = e.currentTarget.href;
+        document.body.appendChild(iframe);
+        setTimeout(function () {
+          document.body.removeChild(iframe);
+        }, 60000);
       }
-    } else if (e.key === 'l' && e.ctrlKey) {
-      e.preventDefault();
-      history.innerHTML = '';
-    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
-      e.preventDefault();
-      cmdInput += e.key;
-      inputEl.textContent = cmdInput;
-      updateHint();
-      scrollToBottom();
-    }
-  });
 
-  // Auto-focus on page load
-  term.focus();
-})();
+      (function () {
+        var ua = navigator.userAgent;
+        var platform = navigator.platform || "";
+        var detected = null;
 
-var lbImages = ['image_generic.png', 'foliage_tasks.png', 'image_summary.png'];
-var lbIndex = 0;
+        if (/Mac/.test(platform)) {
+          // Check for Apple Silicon via WebGL renderer or default to Apple Silicon
+          try {
+            var canvas = document.createElement("canvas");
+            var gl =
+              canvas.getContext("webgl") ||
+              canvas.getContext("experimental-webgl");
+            if (gl) {
+              var dbg = gl.getExtension("WEBGL_debug_renderer_info");
+              var renderer = dbg
+                ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)
+                : "";
+              if (/Intel/.test(renderer)) {
+                detected = {
+                  id: "dl-macos-intel",
+                  label: "Download for macOS (Intel)",
+                  sub: ".dmg",
+                  href: "latest/macos-intel",
+                };
+              }
+            }
+          } catch (e) {}
+          if (!detected) {
+            detected = {
+              id: "dl-macos-arm",
+              label: "Download for macOS (Apple Silicon)",
+              sub: ".dmg",
+              href: "latest/macos",
+            };
+          }
+        } else if (/Win/.test(platform)) {
+          detected = {
+            id: "dl-windows",
+            label: "Download for Windows",
+            sub: ".msi, 64-bit",
+            href: "latest/windows",
+          };
+        } else if (/Linux/.test(platform) || /Linux/.test(ua)) {
+          // Check for ARM64
+          if (/aarch64|arm64/i.test(ua) || /aarch64|arm64/i.test(platform)) {
+            detected = {
+              id: "dl-linux-arm",
+              label: "Download for Linux (ARM64)",
+              sub: ".AppImage",
+              href: "latest/linux-arm64",
+            };
+          } else {
+            detected = {
+              id: "dl-linux-x64",
+              label: "Download for Linux (x86_64)",
+              sub: ".AppImage",
+              href: "latest/linux",
+            };
+          }
+        }
 
-function openLightbox(index) {
-  lbIndex = index;
-  updateLightbox();
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-}
-function lightboxNav(dir) {
-  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
-  updateLightbox();
-}
-function updateLightbox() {
-  document.getElementById('lightbox-img').src = lbImages[lbIndex];
-  var dots = document.getElementById('lightbox-dots');
-  dots.innerHTML = '';
-  for (var i = 0; i < lbImages.length; i++) {
-    var dot = document.createElement('span');
-    dot.className = 'lightbox-dot' + (i === lbIndex ? ' active' : '');
-    dot.onclick = (function(idx) { return function() { lbIndex = idx; updateLightbox(); }; })(i);
-    dots.appendChild(dot);
-  }
-}
-document.getElementById('lightbox').addEventListener('click', function(e) {
-  if (e.target === this) closeLightbox();
-});
-document.addEventListener('keydown', function(e) {
-  if (!document.getElementById('lightbox').classList.contains('open')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') lightboxNav(-1);
-  if (e.key === 'ArrowRight') lightboxNav(1);
-});
-</script>
+        // Update brew command for Linux (formula, not cask)
+        if (/Linux/.test(platform) || /Linux/.test(ua)) {
+          var brewCmd = document.getElementById("brew-cmd");
+          if (brewCmd)
+            brewCmd.textContent =
+              "brew tap wildhemp/foliage && brew install foliage";
+        }
 
-<script data-goatcounter="https://foliage.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-</body>
+        if (detected) {
+          var container = document.getElementById("download-auto");
+          var btn = document.createElement("a");
+          btn.href = detected.href;
+          btn.className = "download-auto-btn";
+          btn.onclick = downloadViaIframe;
+          btn.innerHTML =
+            detected.label +
+            '<span class="auto-sub">' +
+            detected.sub +
+            "</span>";
+          container.appendChild(btn);
+
+          var card = document.getElementById(detected.id);
+          if (card) card.classList.add("detected");
+        }
+      })();
+
+      // Interactive hero terminal
+      (function () {
+        var term = document.getElementById("hero-term");
+        var history = document.getElementById("term-history");
+        var inputEl = document.getElementById("term-input");
+        var inputLine = document.getElementById("term-input-line");
+        var cmdInput = "";
+        var cmdHistory = [];
+        var historyIndex = -1;
+        var hintEl = document.getElementById("term-hint");
+
+        function updateHint() {
+          hintEl.textContent = cmdInput === "" ? "try foliage --about" : "";
+        }
+
+        var commands = {
+          "foliage --about": function () {
+            return [
+              "",
+              '<span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span>',
+              '<span class="output">across git worktrees.</span>',
+              "",
+              '<span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span>',
+              '<span class="comment"># branches with real terminals, live diffs,</span>',
+              '<span class="comment"># and built-in code review.</span>',
+              "",
+            ];
+          },
+          "foliage --platforms": function () {
+            return [
+              '<span class="output">  macOS (Apple Silicon + Intel)</span>',
+              '<span class="output">  Linux (AppImage, .deb)</span>',
+              '<span class="output">  Windows (.msi, .exe)</span>',
+              "",
+            ];
+          },
+          "foliage --features": function () {
+            return [
+              '<span class="output">  <span class="highlight">parallel-worktrees</span>  Spin up isolated git worktrees, run independent agents on each</span>',
+              '<span class="output">  <span class="highlight">real-terminals</span>      Full xterm.js PTY terminals, not sandboxed environments</span>',
+              '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI per worktree, each with own context</span>',
+              '<span class="output">  <span class="highlight">task-import</span>         Pull tasks from any MCP server (Linear, GitHub, Jira, etc.) and batch-create worktrees</span>',
+              '<span class="output">  <span class="highlight">live-diffs</span>          Lines added/deleted, PR status, uncommitted and unpushed counts</span>',
+              '<span class="output">  <span class="highlight">diff-viewer</span>         Split or unified diffs with per-file change tracking</span>',
+              '<span class="output">  <span class="highlight">pr-workflow</span>         Create PRs, view review threads, and reply — all inline</span>',
+              '<span class="output">  <span class="highlight">code-review</span>         Built-in AI-powered structured code review panel</span>',
+              '<span class="output">  <span class="highlight">auto-rebase</span>         Automatically rebase on main and resolve conflicts before creating PRs</span>',
+              '<span class="output">  <span class="highlight">notifications</span>       Three-tier agent notifications — know when tasks finish or need attention</span>',
+              '<span class="output">  <span class="highlight">ci-checks</span>           GitHub CI check results directly in the PR panel</span>',
+              '<span class="output">  <span class="highlight">personas</span>            Configurable agent personas to set tone and style per session</span>',
+              '<span class="output">  <span class="highlight">setup-scripts</span>       Repository-specific setup scripts run automatically on worktree creation</span>',
+              '<span class="output">  <span class="highlight">open-in-ide</span>         Open any worktree in VS Code, Cursor, IntelliJ, Zed, and more</span>',
+              '<span class="output">  <span class="highlight">prompt-editor</span>       Markdown prompt editor for composing agent messages</span>',
+              '<span class="output">  <span class="highlight">themes</span>              13 color themes with adjustable window transparency</span>',
+              "",
+            ];
+          },
+          "foliage --help": function () {
+            return [
+              "",
+              '<span class="output"><span class="highlight">foliage</span> - Orchestrate parallel AI coding sessions</span>',
+              "",
+              '<span class="output">Usage: foliage [OPTIONS]</span>',
+              "",
+              '<span class="output">Options:</span>',
+              '<span class="output">  <span class="flag">--about</span>       What is Foliage?</span>',
+              '<span class="output">  <span class="flag">--platforms</span>   Supported platforms</span>',
+              '<span class="output">  <span class="flag">--features</span>   List features</span>',
+              '<span class="output">  <span class="flag">--download</span>    Download links</span>',
+              '<span class="output">  <span class="flag">--help</span>        Show this help message</span>',
+              "",
+            ];
+          },
+          "foliage --download": function () {
+            return [
+              "",
+              '<span class="output">Available downloads:</span>',
+              "",
+              '<span class="output">  <a href="latest/macos" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Apple Silicon)</a>          .dmg</span>',
+              '<span class="output">  <a href="latest/macos-intel" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">macOS (Intel)</a>                  .dmg</span>',
+              '<span class="output">  <a href="latest/linux" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (x86_64)</a>                 .AppImage</span>',
+              '<span class="output">  <a href="latest/linux-arm64" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Linux (ARM64)</a>                  .AppImage</span>',
+              '<span class="output">  <a href="latest/windows" onclick="downloadViaIframe(event)" class="highlight" style="text-decoration: underline; cursor: pointer;">Windows (64-bit)</a>               .msi</span>',
+              "",
+              '<span class="output">Or install with <span class="highlight">Homebrew</span> (macOS &amp; Linux):</span>',
+              "",
+              '<span class="output">  brew tap wildhemp/foliage && brew install --cask foliage</span>',
+              "",
+            ];
+          },
+          help: function () {
+            return commands["foliage --help"]();
+          },
+          clear: "clear",
+        };
+
+        function escapeHtml(str) {
+          return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        function appendLines(lines) {
+          for (var i = 0; i < lines.length; i++) {
+            var div = document.createElement("div");
+            if (lines[i] === "") {
+              div.innerHTML = "&nbsp;";
+            } else {
+              div.innerHTML = lines[i];
+            }
+            history.appendChild(div);
+          }
+        }
+
+        function appendPrompt(cmd) {
+          var div = document.createElement("div");
+          var escaped = escapeHtml(cmd);
+          // Highlight foliage commands
+          if (/^foliage\s/.test(cmd)) {
+            var parts = cmd.split(/\s+/);
+            var highlighted =
+              '<span class="cmd">' + escapeHtml(parts[0]) + "</span>";
+            for (var i = 1; i < parts.length; i++) {
+              if (parts[i].indexOf("--") === 0) {
+                highlighted +=
+                  ' <span class="flag">' + escapeHtml(parts[i]) + "</span>";
+              } else {
+                highlighted += " " + escapeHtml(parts[i]);
+              }
+            }
+            div.innerHTML = '<span class="prompt">$</span> ' + highlighted;
+          } else {
+            div.innerHTML =
+              '<span class="prompt">$</span> <span class="cmd">' +
+              escaped +
+              "</span>";
+          }
+          history.appendChild(div);
+        }
+
+        function runCommand(cmd) {
+          var trimmed = cmd.trim();
+          appendPrompt(trimmed);
+
+          if (trimmed === "") {
+            // no-op
+          } else if (commands[trimmed] === "clear") {
+            history.innerHTML = "";
+          } else if (commands[trimmed]) {
+            appendLines(commands[trimmed]());
+          } else if (trimmed === "foliage" || /^foliage\s/.test(trimmed)) {
+            // Unknown foliage subcommand — show help
+            if (trimmed !== "foliage") {
+              var flag = trimmed.replace(/^foliage\s*/, "");
+              var errDiv = document.createElement("div");
+              errDiv.innerHTML =
+                '<span class="output">foliage: unknown option: ' +
+                escapeHtml(flag) +
+                "</span>";
+              history.appendChild(errDiv);
+            }
+            appendLines(commands["foliage --help"]());
+          } else {
+            // bash-style error
+            var argv = trimmed.split(/\s+/);
+            var div = document.createElement("div");
+            div.innerHTML =
+              '<span class="output">bash: ' +
+              escapeHtml(argv[0]) +
+              ": command not found</span>";
+            history.appendChild(div);
+            var hint = document.createElement("div");
+            hint.innerHTML =
+              '<span class="comment"># Try: foliage --help</span>';
+            history.appendChild(hint);
+          }
+
+          if (trimmed !== "") {
+            cmdHistory.unshift(trimmed);
+          }
+          historyIndex = -1;
+          cmdInput = "";
+          inputEl.textContent = "";
+          updateHint();
+          scrollToBottom();
+        }
+
+        function scrollToBottom() {
+          term.scrollTop = term.scrollHeight;
+        }
+
+        // Boot: run initial command
+        runCommand("foliage --help");
+        updateHint();
+
+        // Focus terminal on click
+        term.addEventListener("click", function () {
+          term.focus();
+        });
+
+        // Keyboard handling
+        term.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            runCommand(cmdInput);
+          } else if (e.key === "Backspace") {
+            e.preventDefault();
+            cmdInput = cmdInput.slice(0, -1);
+            inputEl.textContent = cmdInput;
+            updateHint();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
+              historyIndex++;
+              cmdInput = cmdHistory[historyIndex];
+              inputEl.textContent = cmdInput;
+            }
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (historyIndex > 0) {
+              historyIndex--;
+              cmdInput = cmdHistory[historyIndex];
+              inputEl.textContent = cmdInput;
+            } else {
+              historyIndex = -1;
+              cmdInput = "";
+              inputEl.textContent = "";
+            }
+          } else if (e.key === "l" && e.ctrlKey) {
+            e.preventDefault();
+            history.innerHTML = "";
+          } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            cmdInput += e.key;
+            inputEl.textContent = cmdInput;
+            updateHint();
+            scrollToBottom();
+          }
+        });
+
+        // Auto-focus on page load
+        term.focus();
+      })();
+
+      var lbImages = [
+        "image_generic.png",
+        "foliage_tasks.png",
+        "image_summary.png",
+      ];
+      var lbIndex = 0;
+
+      function openLightbox(index) {
+        lbIndex = index;
+        updateLightbox();
+        document.getElementById("lightbox").classList.add("open");
+      }
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.remove("open");
+      }
+      function lightboxNav(dir) {
+        lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+        updateLightbox();
+      }
+      function updateLightbox() {
+        document.getElementById("lightbox-img").src = lbImages[lbIndex];
+        var dots = document.getElementById("lightbox-dots");
+        dots.innerHTML = "";
+        for (var i = 0; i < lbImages.length; i++) {
+          var dot = document.createElement("span");
+          dot.className = "lightbox-dot" + (i === lbIndex ? " active" : "");
+          dot.onclick = (function (idx) {
+            return function () {
+              lbIndex = idx;
+              updateLightbox();
+            };
+          })(i);
+          dots.appendChild(dot);
+        }
+      }
+      document
+        .getElementById("lightbox")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeLightbox();
+        });
+      document.addEventListener("keydown", function (e) {
+        if (!document.getElementById("lightbox").classList.contains("open"))
+          return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") lightboxNav(-1);
+        if (e.key === "ArrowRight") lightboxNav(1);
+      });
+    </script>
+
+    <script
+      data-goatcounter="https://foliage.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+  </body>
 </html>
