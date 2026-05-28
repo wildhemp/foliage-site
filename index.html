@@ -582,8 +582,8 @@
     <section class="section-screenshots">
       <div class="screenshot-preview" onclick="openLightbox(0)">
         <img
-          src="image_generic.png"
-          alt="Foliage - worktree view with agent terminal, user terminal, and changes panel"
+          src="agent-pr-flow.png"
+          alt="Foliage - agent terminal running PR creation with worktree sidebar and diff view"
         />
       </div>
     </section>
@@ -699,8 +699,8 @@
               <span class="feat-name">multi-agent</span
               ><span class="feat-sep">--</span
               ><span class="feat-desc"
-                >Claude Code, Codex, and Gemini CLI per worktree, each with own
-                context</span
+                >Claude Code, Codex, and Gemini CLI — pick a different agent per
+                worktree</span
               >
             </li>
             <li>
@@ -727,10 +727,34 @@
               >
             </li>
             <li>
+              <span class="feat-name">file-editor</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Built-in file browser and editor with tabs, syntax
+                highlighting, and dirty-state tracking</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">inline-browser</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Built-in browser panel with omnibar — preview dev servers and
+                review PRs without leaving the app</span
+              >
+            </li>
+            <li>
               <span class="feat-name">pr-workflow</span
               ><span class="feat-sep">--</span
               ><span class="feat-desc"
                 >Create PRs, view review threads, and reply — all inline</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">pr-reviews</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >View PR review threads, reply to comments, resolve threads, and
+                see CI check results</span
               >
             </li>
             <li>
@@ -746,6 +770,14 @@
               ><span class="feat-desc"
                 >Automatically rebase on main and resolve conflicts before
                 creating PRs</span
+              >
+            </li>
+            <li>
+              <span class="feat-name">context-handoff</span
+              ><span class="feat-sep">--</span
+              ><span class="feat-desc"
+                >Context files carry task instructions and terminal scrollback
+                between agent sessions</span
               >
             </li>
             <li>
@@ -772,14 +804,6 @@
               >
             </li>
             <li>
-              <span class="feat-name">setup-scripts</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Repository-specific setup scripts run automatically on worktree
-                creation</span
-              >
-            </li>
-            <li>
               <span class="feat-name">open-in-ide</span
               ><span class="feat-sep">--</span
               ><span class="feat-desc"
@@ -788,17 +812,10 @@
               >
             </li>
             <li>
-              <span class="feat-name">prompt-editor</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Markdown prompt editor for composing agent messages</span
-              >
-            </li>
-            <li>
               <span class="feat-name">themes</span
               ><span class="feat-sep">--</span
               ><span class="feat-desc"
-                >13 color themes with adjustable window transparency</span
+                >12 color themes with adjustable window transparency</span
               >
             </li>
           </ul>
@@ -1009,20 +1026,21 @@
             return [
               '<span class="output">  <span class="highlight">parallel-worktrees</span>  Spin up isolated git worktrees, run independent agents on each</span>',
               '<span class="output">  <span class="highlight">real-terminals</span>      Full xterm.js PTY terminals, not sandboxed environments</span>',
-              '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI per worktree, each with own context</span>',
+              '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI — pick a different agent per worktree</span>',
               '<span class="output">  <span class="highlight">task-import</span>         Pull tasks from any MCP server (Linear, GitHub, Jira, etc.) and batch-create worktrees</span>',
               '<span class="output">  <span class="highlight">live-diffs</span>          Lines added/deleted, PR status, uncommitted and unpushed counts</span>',
               '<span class="output">  <span class="highlight">diff-viewer</span>         Split or unified diffs with per-file change tracking</span>',
+              '<span class="output">  <span class="highlight">file-editor</span>         Built-in file browser and editor with tabs and syntax highlighting</span>',
               '<span class="output">  <span class="highlight">pr-workflow</span>         Create PRs, view review threads, and reply — all inline</span>',
+              '<span class="output">  <span class="highlight">pr-reviews</span>          View PR review threads, reply to comments, resolve threads, and see CI checks</span>',
               '<span class="output">  <span class="highlight">code-review</span>         Built-in AI-powered structured code review panel</span>',
               '<span class="output">  <span class="highlight">auto-rebase</span>         Automatically rebase on main and resolve conflicts before creating PRs</span>',
+              '<span class="output">  <span class="highlight">context-handoff</span>     Context files carry task instructions and scrollback between agent sessions</span>',
               '<span class="output">  <span class="highlight">notifications</span>       Three-tier agent notifications — know when tasks finish or need attention</span>',
               '<span class="output">  <span class="highlight">ci-checks</span>           GitHub CI check results directly in the PR panel</span>',
               '<span class="output">  <span class="highlight">personas</span>            Configurable agent personas to set tone and style per session</span>',
-              '<span class="output">  <span class="highlight">setup-scripts</span>       Repository-specific setup scripts run automatically on worktree creation</span>',
               '<span class="output">  <span class="highlight">open-in-ide</span>         Open any worktree in VS Code, Cursor, IntelliJ, Zed, and more</span>',
-              '<span class="output">  <span class="highlight">prompt-editor</span>       Markdown prompt editor for composing agent messages</span>',
-              '<span class="output">  <span class="highlight">themes</span>              13 color themes with adjustable window transparency</span>',
+              '<span class="output">  <span class="highlight">themes</span>              12 color themes with adjustable window transparency</span>',
               "",
             ];
           },
@@ -1215,9 +1233,15 @@
       })();
 
       var lbImages = [
-        "image_generic.png",
-        "foliage_tasks.png",
-        "image_summary.png",
+        "agent-pr-flow.png",
+        "worktree-sidebar.png",
+        "workspace-diff-view.png",
+        "changed-files-panel.png",
+        "pr-review-panel.png",
+        "built-in-browser-dark.png",
+        "built-in-browser-light.png",
+        "setup-scripts-modal.png",
+        "light-theme.png",
       ];
       var lbIndex = 0;
 
