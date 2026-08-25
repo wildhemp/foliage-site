@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>The Origin Story and the Bright Future | Foliage Blog</title>
+    <meta
+      name="description"
+      content="How Foliage started as a Friday-afternoon experiment, why it remains closed source for now, lessons learned, and ideas for its future."
+    />
+    <link rel="canonical" href="https://foliage.build/blog/origin-story" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:title"
+      content="The Origin Story and the Bright Future"
+    />
+    <meta
+      property="og:description"
+      content="How Foliage started, lessons learned while building it, and ideas for its future."
+    />
+    <meta
+      property="og:url"
+      content="https://foliage.build/blog/origin-story"
+    />
+    <meta property="og:site_name" content="Foliage" />
+    <meta property="article:published_time" content="2026-08-25" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="The Origin Story and the Bright Future"
+    />
+    <meta
+      name="twitter:description"
+      content="How Foliage started, lessons learned while building it, and ideas for its future."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "The Origin Story and the Bright Future",
+        "datePublished": "2026-08-25",
+        "author": {
+          "@type": "Organization",
+          "name": "Foliage",
+          "url": "https://foliage.build"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Foliage",
+          "url": "https://foliage.build"
+        },
+        "description": "How Foliage started, lessons learned while building it, and ideas for its future.",
+        "mainEntityOfPage": "https://foliage.build/blog/origin-story"
+      }
+    </script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #282c34;
+        --bg-surface: #21252b;
+        --bg-gutter: #2c313a;
+        --bg-active: #3e4451;
+        --text: #abb2bf;
+        --text-muted: #5c6370;
+        --text-bright: #dcdfe4;
+        --accent: #61afef;
+        --accent-hover: #79bff5;
+        --green: #98c379;
+        --yellow: #e5c07b;
+        --red: #e06c75;
+        --purple: #c678dd;
+        --cyan: #56b6c2;
+        --orange: #d19a66;
+        --mono:
+          "JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", "Consolas",
+          monospace;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .nav-logo {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green);
+        text-decoration: none;
+      }
+      .nav-logo::before {
+        content: "> ";
+        color: var(--text-muted);
+      }
+      .nav-logo:hover {
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .nav-links a {
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+      .nav-links a:hover {
+        color: var(--text-bright);
+        text-decoration: none;
+      }
+
+      .article-header {
+        padding: 60px 24px 32px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .article-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-bright);
+        line-height: 1.4;
+        margin-bottom: 12px;
+      }
+      .article-header h1 del {
+        color: var(--text-muted);
+      }
+      .article-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .article-meta time {
+        color: var(--text);
+      }
+
+      .article-body {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+      }
+      .article-body h2 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        margin: 48px 0 16px;
+      }
+      .article-body h2:first-child {
+        margin-top: 0;
+      }
+      .article-body h2::before {
+        content: "# ";
+        color: var(--bg-active);
+      }
+      .article-body h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--accent);
+        margin: 32px 0 12px;
+      }
+      .article-body p {
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+      .article-body ul {
+        margin-bottom: 16px;
+        padding-left: 24px;
+      }
+      .article-body li {
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+      .article-body li::marker {
+        color: var(--text-muted);
+      }
+
+      footer {
+        border-top: 1px solid var(--bg-active);
+        padding: 20px 24px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 12px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 640px) {
+        nav {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .article-header {
+          padding: 40px 16px 24px;
+        }
+        .article-header h1 {
+          font-size: 21px;
+        }
+        .article-body {
+          padding: 0 16px 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="nav-logo">foliage</a>
+      <div class="nav-links">
+        <a href="/blog/">blog</a>
+        <a href="/#download" style="color: var(--accent)">download</a>
+      </div>
+    </nav>
+
+    <header class="article-header">
+      <h1>The origin story and the <del>bright</del> future</h1>
+      <div class="article-meta">
+        <time datetime="2026-08-25">August 25, 2026</time>
+      </div>
+    </header>
+
+    <article class="article-body">
+      <h2>
+        Why-oh-why would I do yet another worktree orchestration app when so
+        many exist?
+      </h2>
+
+      <p>
+        First I would point out that when I started this, there were only
+        something like 6 or 7 (that I knew of, anyway; I'm sure GitHub history
+        would tell a different story).
+      </p>
+
+      <p>
+        The way it started was something like this: I was trying to use
+        Conductor, which at that point was already a somewhat mature product,
+        and somehow I didn't get the same results with it as I did using Claude
+        CLI. It was somewhat subtle, but I got better results for similar tasks
+        in Claude CLI. I suspected the issue to be related to model
+        configuration. Claude CLI let me define not just the model but also the
+        effort separately, and I couldn't find the same option in Conductor.
+        Besides that, while I generally liked Conductor, some stuff was a bit
+        cumbersome to do.
+      </p>
+
+      <p>
+        Really, at that point, I was happy with Claude CLI and mainly needed
+        worktree management. It also occurred to me that Anthropic, OpenAI, and
+        Google have teams working on the tools, and the CLIs already have almost
+        everything I or others need. Plus, I also like TUIs (but I admit that
+        PTYs can have a steep learning curve).
+      </p>
+
+      <p>
+        So, on a Friday afternoon I was like, let me ask Claude how I would go
+        about doing something similar to Conductor, but instead of using a
+        custom harness, just use a PTY and start Claude CLI. In 15 minutes, I
+        decided what it would look like, and in an hour I had a working version,
+        which I started using right away. Then I found all the things that were
+        hard, impossible, or not good and fixed them (vibe coded it).
+      </p>
+
+      <p>
+        I found this exhilarating. I didn't know Rust at all, I don't normally
+        use React, and here was an app that used both and worked the way I wanted
+        it.
+      </p>
+
+      <p>
+        I kept having new ideas on what features to add to make my life easier
+        and added them. For like 2 weeks I regularly slept less than 6 hours. I
+        added automations like parsing PR comments and fixing them
+        automatically, and buttons for my most used prompts like rebasing and
+        resolving conflicts (yeah, I could add a skill for this, I probably will
+        do that too). I added features like opening diffs, then files in general,
+        support for Codex and Gemini CLIs, support for Windows and Linux (though
+        this one mostly worked), etc., etc.
+      </p>
+
+      <p>
+        Then I got tired, and it worked kinda okay, and these two things made me
+        slow down considerably. I needed a break because I couldn't keep up
+        doing one and a half jobs, plus my life.
+      </p>
+
+      <h2>Why not open source it</h2>
+
+      <p>
+        Yeah, I was going back and forth on this. The deciding factor was that I
+        do have to deal with coordination on projects, repos, features, and
+        whatnot in my day job, and very often it takes a lot away from the fun.
+        And this would only work if and for as long as I had fun. I was really
+        afraid that if others accidentally found it and started adding or
+        requesting stuff, it would make it not super fun anymore. The plan was,
+        and still is, to make it open source eventually. Not that I think
+        there's that much value in doing so; this is just one of thousands of
+        similar apps.
+      </p>
+
+      <h2>What I learnt along the way</h2>
+
+      <ul>
+        <li>I can still have fun, even while vibe coding</li>
+        <li>
+          A lot of coding time is spent learning how a framework, SDK, or
+          codebase works and starting to use it.
+        </li>
+        <li>
+          Each agent kinda had a coding style very much in line with the company
+          implementing it. Gemini was very Googly in a certain way and super bad
+          at UI. Claude was really an agent primarily developed for coding, or at
+          least felt like it, and kinda heavyweight at this point. Codex was/is
+          a lot lighter and somewhere in between.
+        </li>
+        <li>
+          The hardest problem I faced was how to recognize when the agent is
+          done as opposed to just having some break or a subagent being done.
+          Even with webhooks, Claude had a lot of problems implementing it right
+          and handling edge cases. I guess here it would be helpful if I looked
+          more deeply into it myself.
+        </li>
+        <li>
+          While adding personas seemed like a good idea, in reality they don't
+          work super well. Probably just need more time.
+        </li>
+        <li>
+          Windows is still not easy for me to use, especially after being on Mac
+          since 2009
+        </li>
+        <li>
+          You have to actively use the thing you are developing to have a chance
+          of making it usable
+        </li>
+        <li>
+          Just putting up a page on the internet doesn't mean anyone will ever
+          find it, or if they do, they will care (though, this I suspected)
+        </li>
+        <li>UI is still hard to get right</li>
+      </ul>
+
+      <h2>Any long-term plans?</h2>
+
+      <p>Plans, no, not really. Ideas, yeah, those I have.</p>
+
+      <h3>Ditch the CLIs...</h3>
+
+      <p>... and use some open source harness instead.</p>
+
+      <p>
+        This goes against the whole CLI idea I started with, and the reasons I
+        started with it. But the thing is that using the CLI makes certain
+        things hard or cumbersome. Like adding loops/automations.
+      </p>
+
+      <p>
+        Prompting works kinda well, but it has its problems and I haven't so far
+        managed to coerce Codex or Claude to find a good solution. They are not
+        super creative. A lot of it right now relies on time-based thresholds
+        which, while they work most of the time, fail just enough that it makes
+        it super annoying. It also doesn't make for a good UX :/.
+      </p>
+
+      <p>
+        It would make a lot of more complicated things possible as well, stuff
+        that doesn't even occur to me because, well, even simpler things don't
+        work that well today. I could do a more integrated UI and wouldn't be
+        limited to what the CLI developers had in mind or copied from each
+        other.
+      </p>
+
+      <h3>Just leave it behind and do something cloud based</h3>
+
+      <p>
+        I think most of the models are good enough now to really just go and
+        work alone and figure shit out without needing too much supervision. I
+        like to be hands-on and steer them along the way, but it is not always
+        possible, and especially the review loop takes a lot of time and doesn't
+        need a lot of interaction. And I know that a lot of these exist. Somehow
+        I don't like Claude's solution, and Devin's models are still lagging.
+      </p>
+
+      <p>
+        Plus, I'm curious, I like to learn by doing, and I feel like there are a
+        lot of interesting problems there, and it would be super cool to see how
+        far I can get.
+      </p>
+
+      <p>
+        This also requires using some harness, or implementing one, which is also
+        an interesting problem and would let me understand a lot of things a lot
+        better.
+      </p>
+
+      <h3>Maybe add more features</h3>
+
+      <ul>
+        <li>
+          Proper local code review loop, because I feel like this could really
+          speed things up
+        </li>
+        <li>
+          Support for multi-repo sessions, though, from a UX and worktree
+          management perspective this may not be super simple
+        </li>
+        <li>
+          Add things like monitoring PR review requests and automatically doing
+          reviews
+        </li>
+        <li>Fix annoying bugs</li>
+      </ul>
+
+      <p>
+        A lot of these would actually work better in a managed cloud environment,
+        but would probably work well enough in the current app too, with the
+        limitation that the computer going to sleep will stop the work. Which
+        may actually be okay/fine.
+      </p>
+    </article>
+
+    <footer>
+      <span style="color: var(--green)">$</span>
+      <span style="color: var(--text-bright)">echo</span>
+      <span style="color: var(--green)">"Built using Foliage"</span>
+      <br />
+      <a href="mailto:hello@foliage.build">hello@foliage.build</a>
+    </footer>
+
+    <script
+      data-goatcounter="https://foliage.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+  </body>
+</html>
