@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- Public landing page: introduces Foliage, describes its features, and provides downloads.
+     The interactive terminal reads feature descriptions from the visible list below. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +9,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta
       name="description"
-      content="Run a team of AI coding agents across git worktrees. Parallel terminals, live diffs, and code review in one desktop app."
+      content="Run AI coding agents in parallel, each in its own git worktree. Edit and navigate code, preview your app, and review pull requests in one desktop workspace."
     />
     <style>
       * {
@@ -165,6 +167,29 @@
         max-width: 800px;
         margin: 0 auto;
       }
+      .hero h1 {
+        color: var(--text-bright);
+        font-size: clamp(26px, 5vw, 38px);
+        line-height: 1.3;
+        letter-spacing: -1px;
+        margin-bottom: 20px;
+      }
+      .hero-description {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+      .hero-detail {
+        margin-bottom: 24px;
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        margin-bottom: 32px;
+      }
+      .section-intro {
+        margin-bottom: 20px;
+      }
       .hero .term-body {
         line-height: 2;
       }
@@ -284,7 +309,7 @@
         list-style: none;
       }
       .feature-list li {
-        padding: 8px 0;
+        padding: 18px 0;
         border-bottom: 1px solid var(--bg-gutter);
       }
       .feature-list li:last-child {
@@ -292,10 +317,9 @@
       }
       .feature-list .feat-name {
         color: var(--accent);
-      }
-      .feature-list .feat-sep {
-        color: var(--text-muted);
-        margin: 0 8px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
       }
       .feature-list .feat-desc {
         color: var(--text);
@@ -486,9 +510,6 @@
         }
       }
 
-      @media (max-width: 640px) {
-      }
-
       /* Footer */
       footer {
         border-top: 1px solid var(--bg-active);
@@ -546,12 +567,29 @@
     <nav>
       <div class="nav-logo">foliage</div>
       <div class="nav-links">
+        <a href="#features">features</a>
         <a href="/blog/">blog</a>
         <a href="#download" style="color: var(--accent)">download</a>
       </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero" aria-labelledby="intro-title">
+      <h1 id="intro-title">A workspace for parallel AI coding.</h1>
+      <p class="hero-description">
+        Foliage is a desktop app that gives each coding task its own git worktree,
+        agent session, and terminals. Work on a feature, a bug fix, and an
+        experiment at the same time, with a separate branch and working directory
+        for each.
+      </p>
+      <p class="hero-detail">
+        Run Claude Code, Codex, Gemini CLI, or Devin CLI using the tools and
+        accounts you already have. Follow their progress, explore the code,
+        preview your app, and review changes in one place.
+      </p>
+      <div class="hero-actions">
+        <a href="#download">Download Foliage &darr;</a>
+        <a href="#features">Explore the features &darr;</a>
+      </div>
       <div class="term">
         <div class="term-bar">
           <span class="term-dot r"></span>
@@ -563,7 +601,8 @@
           class="term-body"
           id="hero-term"
           tabindex="0"
-          style="cursor: text; outline: none; height: 430px; overflow-y: auto"
+          aria-label="Interactive demo terminal. Type foliage --help for commands."
+          style="cursor: text; height: 430px; overflow-y: auto"
         >
           <div id="term-history"></div>
           <div id="term-input-line">
@@ -670,7 +709,12 @@
     </section>
 
     <section>
-      <h2>Features</h2>
+      <h2 id="features">Features</h2>
+      <p class="section-intro">
+        Keep the whole task in view, from the first prompt to the pull request.
+        Each worktree brings together your agent, terminals, files, and review
+        tools so you can pick up where you left off.
+      </p>
       <div class="term">
         <div class="term-bar">
           <span class="term-dot r"></span>
@@ -681,142 +725,65 @@
         <div class="term-body">
           <ul class="feature-list">
             <li>
-              <span class="feat-name">parallel-worktrees</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Spin up isolated git worktrees, run independent agents on
-                each</span
-              >
+              <h3 class="feat-name">Parallel worktrees</h3>
+              <p class="feat-desc">
+                Give each task its own branch and working directory, with an
+                independent agent session. Switch between tasks while other
+                agents keep working, and see change counts and PR status in
+                the sidebar.
+              </p>
             </li>
             <li>
-              <span class="feat-name">real-terminals</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Full xterm.js PTY terminals, not sandboxed environments</span
-              >
+              <h3 class="feat-name">Your choice of agent</h3>
+              <p class="feat-desc">
+                Run Claude Code, Codex, Gemini CLI, or Devin CLI in real
+                terminals. Choose a different agent for each worktree and
+                use your existing CLI installation and sign-in.
+              </p>
             </li>
             <li>
-              <span class="feat-name">multi-agent</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Claude Code, Codex, and Gemini CLI — pick a different agent per
-                worktree</span
-              >
+              <h3 class="feat-name">Terminal tabs</h3>
+              <p class="feat-desc">
+                Keep a shell for tests, another for your dev server, and
+                your agent alongside them. Multiple terminal tabs let you
+                run commands in the selected worktree without interrupting
+                the agent.
+              </p>
             </li>
             <li>
-              <span class="feat-name">task-import</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Pull tasks from any MCP server (Linear, GitHub Issues, Jira,
-                etc.) and batch-create worktrees</span
-              >
+              <h3 class="feat-name">Code editing and navigation</h3>
+              <p class="feat-desc">
+                Browse files and edit them in tabs with syntax highlighting
+                and change markers. Jump to definitions, find references and
+                implementations, and hover for documentation with a
+                supported language server.
+              </p>
             </li>
             <li>
-              <span class="feat-name">live-diffs</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Lines added/deleted, PR status, uncommitted and unpushed
-                counts</span
-              >
+              <h3 class="feat-name">Live diffs</h3>
+              <p class="feat-desc">
+                Review changes in split or unified views and browse changed
+                files as a directory tree. Open a diffed file directly in
+                the editor when you want to inspect the surrounding code or
+                make an adjustment.
+              </p>
             </li>
             <li>
-              <span class="feat-name">diff-viewer</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Split or unified diffs with per-file change tracking</span
-              >
+              <h3 class="feat-name">Built-in browser</h3>
+              <p class="feat-desc">
+                Preview a local dev server or open a page beside your code.
+                Browser tabs, an address bar, back and forward navigation,
+                and an option to open the current page externally keep
+                previews close to the task.
+              </p>
             </li>
             <li>
-              <span class="feat-name">file-editor</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Built-in file browser and editor with tabs, syntax
-                highlighting, and dirty-state tracking</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">inline-browser</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Built-in browser panel with omnibar — preview dev servers and
-                review PRs without leaving the app</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">pr-workflow</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Create PRs, view review threads, and reply — all inline</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">pr-reviews</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >View PR review threads, reply to comments, resolve threads, and
-                see CI check results</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">code-review</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Built-in AI-powered structured code review panel</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">auto-rebase</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Automatically rebase on main and resolve conflicts before
-                creating PRs</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">context-handoff</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Context files carry task instructions and terminal scrollback
-                between agent sessions</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">notifications</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Three-tier agent notifications — know when tasks finish or need
-                attention</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">ci-checks</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >GitHub CI check results directly in the PR panel</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">personas</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Configurable agent personas to set tone and style per
-                session</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">open-in-ide</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >Open any worktree in VS Code, Cursor, IntelliJ, Zed, and
-                more</span
-              >
-            </li>
-            <li>
-              <span class="feat-name">themes</span
-              ><span class="feat-sep">--</span
-              ><span class="feat-desc"
-                >12 color themes with adjustable window transparency</span
-              >
+              <h3 class="feat-name">AI code review</h3>
+              <p class="feat-desc">
+                Run an AI review and read structured findings in a dedicated
+                panel. Inspect feedback alongside your changes before moving
+                on to the pull request.
+              </p>
             </li>
           </ul>
         </div>
@@ -841,8 +808,9 @@
           <div>
             <div class="step-title">Create worktrees</div>
             <div class="step-desc">
-              Spin up new branches as isolated worktrees. Each gets its own
-              agent and user terminal.
+              Create a worktree for a task, or batch-create worktrees from tasks
+              fetched through Claude Code's configured MCP tools. Repository
+              setup scripts can prepare each new workspace for you.
             </div>
           </div>
         </li>
@@ -851,8 +819,9 @@
           <div>
             <div class="step-title">Deploy agents</div>
             <div class="step-desc">
-              Agents start working in parallel. Monitor progress, review
-              changes, and ship faster.
+              Give each agent a task and let them work in parallel. Notifications
+              let you know when a session finishes or needs attention, so you can
+              review changes and decide what comes next.
             </div>
           </div>
         </li>
@@ -861,9 +830,9 @@
           <div>
             <div class="step-title">Uses your existing CLI agents</div>
             <div class="step-desc">
-              Foliage runs Claude Code, Codex, and Gemini CLI directly — just
-              install them as you normally would. No wrappers, no API keys to
-              configure.
+              Install and sign in to Claude Code, Codex, Gemini CLI, or Devin
+              CLI, then select it in Foliage. Your agent runs in a real terminal
+              with its usual commands and configuration.
             </div>
           </div>
         </li>
@@ -1008,9 +977,9 @@
               '<span class="output">Orchestrate <span class="highlight">parallel AI coding sessions</span></span>',
               '<span class="output">across git worktrees.</span>',
               "",
-              '<span class="comment"># Run Claude Code, Codex, and Gemini CLI agents in isolated</span>',
-              '<span class="comment"># branches with real terminals, live diffs,</span>',
-              '<span class="comment"># and built-in code review.</span>',
+              '<span class="comment"># Run Claude Code, Codex, Gemini CLI, or Devin CLI.</span>',
+              '<span class="comment"># Give each task its own branch, agent, and terminals.</span>',
+              '<span class="comment"># Edit code, preview your app, and review changes in one place.</span>',
               "",
             ];
           },
@@ -1023,26 +992,19 @@
             ];
           },
           "foliage --features": function () {
-            return [
-              '<span class="output">  <span class="highlight">parallel-worktrees</span>  Spin up isolated git worktrees, run independent agents on each</span>',
-              '<span class="output">  <span class="highlight">real-terminals</span>      Full xterm.js PTY terminals, not sandboxed environments</span>',
-              '<span class="output">  <span class="highlight">multi-agent</span>         Claude Code, Codex, and Gemini CLI — pick a different agent per worktree</span>',
-              '<span class="output">  <span class="highlight">task-import</span>         Pull tasks from any MCP server (Linear, GitHub, Jira, etc.) and batch-create worktrees</span>',
-              '<span class="output">  <span class="highlight">live-diffs</span>          Lines added/deleted, PR status, uncommitted and unpushed counts</span>',
-              '<span class="output">  <span class="highlight">diff-viewer</span>         Split or unified diffs with per-file change tracking</span>',
-              '<span class="output">  <span class="highlight">file-editor</span>         Built-in file browser and editor with tabs and syntax highlighting</span>',
-              '<span class="output">  <span class="highlight">pr-workflow</span>         Create PRs, view review threads, and reply — all inline</span>',
-              '<span class="output">  <span class="highlight">pr-reviews</span>          View PR review threads, reply to comments, resolve threads, and see CI checks</span>',
-              '<span class="output">  <span class="highlight">code-review</span>         Built-in AI-powered structured code review panel</span>',
-              '<span class="output">  <span class="highlight">auto-rebase</span>         Automatically rebase on main and resolve conflicts before creating PRs</span>',
-              '<span class="output">  <span class="highlight">context-handoff</span>     Context files carry task instructions and scrollback between agent sessions</span>',
-              '<span class="output">  <span class="highlight">notifications</span>       Three-tier agent notifications — know when tasks finish or need attention</span>',
-              '<span class="output">  <span class="highlight">ci-checks</span>           GitHub CI check results directly in the PR panel</span>',
-              '<span class="output">  <span class="highlight">personas</span>            Configurable agent personas to set tone and style per session</span>',
-              '<span class="output">  <span class="highlight">open-in-ide</span>         Open any worktree in VS Code, Cursor, IntelliJ, Zed, and more</span>',
-              '<span class="output">  <span class="highlight">themes</span>              12 color themes with adjustable window transparency</span>',
-              "",
-            ];
+            // Share the visible descriptions so both feature lists stay current.
+            var lines = [];
+            document.querySelectorAll(".feature-list li").forEach(function (item) {
+              var name = item.querySelector(".feat-name").textContent.trim();
+              var description = item.querySelector(".feat-desc").textContent
+                .replace(/\s+/g, " ").trim();
+              lines.push(
+                '<span class="highlight">' + escapeHtml(name) + "</span>",
+                '<span class="output">' + escapeHtml(description) + "</span>",
+                "",
+              );
+            });
+            return lines;
           },
           "foliage --help": function () {
             return [
@@ -1228,8 +1190,7 @@
           }
         });
 
-        // Auto-focus on page load
-        term.focus();
+        // Leave focus with the reader until they choose to try the terminal.
       })();
 
       var lbImages = [
